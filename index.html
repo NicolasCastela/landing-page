@@ -6,6 +6,10 @@
     <title>Gunic Company - Inovação Tecnológica</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- CDN Libraries -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Header -->
@@ -17,7 +21,11 @@
             <ul class="nav-menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#services">Serviços</a></li>
+                <li><a href="#projects">Projetos</a></li>
+                <li><a href="#innovations">Inovações</a></li>
                 <li><a href="#about">Sobre</a></li>
+                <li><a href="portfolio.html">Portfólio</a></li>
+                <li><a href="blog.html">Blog</a></li>
                 <li><a href="#contact">Contato</a></li>
             </ul>
             <div class="hamburger">
@@ -30,15 +38,29 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="particles"></div>
-        <div class="hero-content">
+        <div id="particles-js"></div>
+        <div class="hero-content" data-aos="fade-up">
             <h1 class="hero-title">
                 <span class="typing-text" data-text="GUNIC COMPANY"></span>
             </h1>
-            <p class="hero-subtitle fade-in">Transformando o futuro através da tecnologia</p>
-            <div class="hero-buttons fade-in">
-                <button class="btn btn-primary">Começar Agora</button>
-                <button class="btn btn-secondary">Saiba Mais</button>
+            <p class="hero-subtitle">Transformando o futuro através da tecnologia</p>
+            <div class="hero-stats" data-aos="fade-up" data-aos-delay="500">
+                <div class="hero-stat">
+                    <i class="fas fa-rocket"></i>
+                    <span>100+ Projetos</span>
+                </div>
+                <div class="hero-stat">
+                    <i class="fas fa-users"></i>
+                    <span>50+ Clientes</span>
+                </div>
+                <div class="hero-stat">
+                    <i class="fas fa-award"></i>
+                    <span>5+ Anos</span>
+                </div>
+            </div>
+            <div class="hero-buttons" data-aos="fade-up" data-aos-delay="700">
+                <button class="btn btn-primary" onclick="scrollToSection('contact')">Começar Agora</button>
+                <button class="btn btn-secondary" onclick="scrollToSection('about')">Saiba Mais</button>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -46,30 +68,217 @@
         </div>
     </section>
 
+    <!-- Dynamic Banner -->
+    <section class="dynamic-banner">
+        <div class="banner-content">
+            <div class="banner-text">
+                <span class="banner-item active">🚀 Lançamento: Nova plataforma de IA em desenvolvimento</span>
+                <span class="banner-item">💡 Inovação: Sistema médico revolucionário em testes</span>
+                <span class="banner-item">🏆 Conquista: Prêmio de melhor startup tech 2024</span>
+                <span class="banner-item">🌟 Novidade: Parceria estratégica com grandes empresas</span>
+            </div>
+        </div>
+    </section>
+
     <!-- Services Section -->
     <section id="services" class="services">
         <div class="container">
-            <h2 class="section-title">Nossos Serviços</h2>
+            <h2 class="section-title" data-aos="fade-up">Nossos Serviços</h2>
             <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🤖</div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-icon"><i class="fas fa-robot"></i></div>
                     <h3>IA & Machine Learning</h3>
                     <p>Soluções inteligentes com tecnologia de ponta</p>
+                    <div class="service-features">
+                        <span>Deep Learning</span>
+                        <span>Computer Vision</span>
+                        <span>NLP</span>
+                    </div>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">🏥</div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-icon"><i class="fas fa-hospital"></i></div>
                     <h3>Sistemas Médicos</h3>
                     <p>Plataformas completas para clínicas e hospitais</p>
+                    <div class="service-features">
+                        <span>Telemedicina</span>
+                        <span>Prontuário Digital</span>
+                        <span>BI Médico</span>
+                    </div>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">📱</div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
                     <h3>Apps Mobile</h3>
                     <p>Aplicativos nativos de alta performance</p>
+                    <div class="service-features">
+                        <span>React Native</span>
+                        <span>Flutter</span>
+                        <span>PWA</span>
+                    </div>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">☁️</div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-icon"><i class="fas fa-cloud"></i></div>
                     <h3>Cloud Solutions</h3>
                     <p>Infraestrutura escalável na nuvem</p>
+                    <div class="service-features">
+                        <span>AWS</span>
+                        <span>Azure</span>
+                        <span>DevOps</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Carousel -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Projetos em Destaque</h2>
+            <div class="swiper projects-swiper" data-aos="fade-up" data-aos-delay="200">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="project-card">
+                            <div class="project-image">
+                                <div class="project-overlay">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                            </div>
+                            <div class="project-content">
+                                <h3>MedIA - Diagnóstico Inteligente</h3>
+                                <p>Sistema de IA para análise de exames médicos com 95% de precisão</p>
+                                <div class="project-tech">
+                                    <span>Python</span>
+                                    <span>TensorFlow</span>
+                                    <span>React</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="project-card">
+                            <div class="project-image">
+                                <div class="project-overlay">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                            </div>
+                            <div class="project-content">
+                                <h3>HealthConnect</h3>
+                                <p>Plataforma de telemedicina conectando médicos e pacientes</p>
+                                <div class="project-tech">
+                                    <span>Node.js</span>
+                                    <span>WebRTC</span>
+                                    <span>MongoDB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="project-card">
+                            <div class="project-image">
+                                <div class="project-overlay">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="project-content">
+                                <h3>DataViz Pro</h3>
+                                <p>Dashboard inteligente para análise de dados em tempo real</p>
+                                <div class="project-tech">
+                                    <span>Vue.js</span>
+                                    <span>D3.js</span>
+                                    <span>PostgreSQL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="project-card">
+                            <div class="project-image">
+                                <div class="project-overlay">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                            </div>
+                            <div class="project-content">
+                                <h3>SecureCloud</h3>
+                                <p>Solução de segurança avançada para infraestrutura em nuvem</p>
+                                <div class="project-tech">
+                                    <span>AWS</span>
+                                    <span>Kubernetes</span>
+                                    <span>Go</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Innovations Page -->
+    <section id="innovations" class="innovations">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Ideias Inovadoras</h2>
+            <div class="innovations-grid">
+                <div class="innovation-card" data-aos="flip-left" data-aos-delay="100">
+                    <div class="innovation-icon">
+                        <i class="fas fa-vr-cardboard"></i>
+                    </div>
+                    <h3>Realidade Virtual Médica</h3>
+                    <p>Treinamento cirúrgico imersivo usando VR para reduzir riscos e melhorar precisão</p>
+                    <div class="innovation-status">
+                        <span class="status-badge concept">Conceito</span>
+                    </div>
+                </div>
+                <div class="innovation-card" data-aos="flip-left" data-aos-delay="200">
+                    <div class="innovation-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <h3>IA Genética Personalizada</h3>
+                    <p>Análise de DNA para tratamentos médicos personalizados usando machine learning</p>
+                    <div class="innovation-status">
+                        <span class="status-badge development">Em Desenvolvimento</span>
+                    </div>
+                </div>
+                <div class="innovation-card" data-aos="flip-left" data-aos-delay="300">
+                    <div class="innovation-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <h3>IoT Espacial</h3>
+                    <p>Rede de sensores IoT para monitoramento ambiental via satélites</p>
+                    <div class="innovation-status">
+                        <span class="status-badge research">Pesquisa</span>
+                    </div>
+                </div>
+                <div class="innovation-card" data-aos="flip-left" data-aos-delay="400">
+                    <div class="innovation-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Neural Interface</h3>
+                    <p>Interface cérebro-computador para controle de dispositivos por pensamento</p>
+                    <div class="innovation-status">
+                        <span class="status-badge concept">Conceito</span>
+                    </div>
+                </div>
+                <div class="innovation-card" data-aos="flip-left" data-aos-delay="500">
+                    <div class="innovation-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Green Computing</h3>
+                    <p>Algoritmos de IA otimizados para reduzir consumo energético em 70%</p>
+                    <div class="innovation-status">
+                        <span class="status-badge development">Em Desenvolvimento</span>
+                    </div>
+                </div>
+                <div class="innovation-card" data-aos="flip-left" data-aos-delay="600">
+                    <div class="innovation-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>Blockchain Quântico</h3>
+                    <p>Segurança quântica aplicada a blockchain para proteção absoluta de dados</p>
+                    <div class="innovation-status">
+                        <span class="status-badge research">Pesquisa</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,7 +362,11 @@
                     <ul>
                         <li><a href="#home">Home</a></li>
                         <li><a href="#services">Serviços</a></li>
+                        <li><a href="#projects">Projetos</a></li>
+                        <li><a href="#innovations">Inovações</a></li>
                         <li><a href="#about">Sobre</a></li>
+                        <li><a href="portfolio.html">Portfólio</a></li>
+                        <li><a href="blog.html">Blog</a></li>
                         <li><a href="#contact">Contato</a></li>
                     </ul>
                 </div>
@@ -172,6 +385,10 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

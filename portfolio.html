@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio - Gunic Company</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .portfolio-hero {
+            height: 60vh;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .portfolio-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+        
+        .portfolio-image {
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .portfolio-content {
+            padding: 2rem;
+        }
+        
+        .portfolio-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .portfolio-tag {
+            background: rgba(124, 58, 237, 0.2);
+            color: var(--accent-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 100px;
+            left: 2rem;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <section class="portfolio-hero">
+        <div class="container">
+            <h1 class="section-title" data-aos="fade-up">Nosso Portfólio</h1>
+            <p data-aos="fade-up" data-aos-delay="200" style="font-size: 1.2rem; color: var(--text-gray);">
+                Conheça alguns dos projetos que desenvolvemos com excelência
+            </p>
+        </div>
+    </section>
+
+    <section style="padding: 5rem 0; background: var(--bg-darker);">
+        <div class="container">
+            <div class="portfolio-grid">
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="portfolio-image">
+                        <i class="fas fa-brain" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">MedIA - Diagnóstico Inteligente</h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Sistema de inteligência artificial para análise de exames médicos com precisão de 95%. 
+                            Revolucionando o diagnóstico médico com machine learning avançado.
+                        </p>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">Python</span>
+                            <span class="portfolio-tag">TensorFlow</span>
+                            <span class="portfolio-tag">React</span>
+                            <span class="portfolio-tag">AWS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="portfolio-image">
+                        <i class="fas fa-heartbeat" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">HealthConnect</h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Plataforma completa de telemedicina conectando médicos e pacientes. 
+                            Interface intuitiva com videoconferência HD e prontuário eletrônico.
+                        </p>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">Node.js</span>
+                            <span class="portfolio-tag">WebRTC</span>
+                            <span class="portfolio-tag">MongoDB</span>
+                            <span class="portfolio-tag">Socket.io</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="portfolio-image">
+                        <i class="fas fa-chart-line" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">DataViz Pro</h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Dashboard inteligente para análise de dados em tempo real. 
+                            Visualizações interativas e insights automáticos para tomada de decisão.
+                        </p>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">Vue.js</span>
+                            <span class="portfolio-tag">D3.js</span>
+                            <span class="portfolio-tag">PostgreSQL</span>
+                            <span class="portfolio-tag">Redis</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="portfolio-image">
+                        <i class="fas fa-shield-alt" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">SecureCloud</h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Solução de segurança avançada para infraestrutura em nuvem. 
+                            Monitoramento 24/7 e proteção contra ameaças cibernéticas.
+                        </p>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">AWS</span>
+                            <span class="portfolio-tag">Kubernetes</span>
+                            <span class="portfolio-tag">Go</span>
+                            <span class="portfolio-tag">Docker</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="500">
+                    <div class="portfolio-image">
+                        <i class="fas fa-mobile-alt" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">FitTracker Pro</h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Aplicativo mobile para acompanhamento de saúde e fitness. 
+                            Integração com wearables e IA para recomendações personalizadas.
+                        </p>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">React Native</span>
+                            <span class="portfolio-tag">Firebase</span>
+                            <span class="portfolio-tag">ML Kit</span>
+                            <span class="portfolio-tag">HealthKit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="600">
+                    <div class="portfolio-image">
+                        <i class="fas fa-graduation-cap" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">EduTech Platform</h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Plataforma educacional com IA adaptativa para personalização do aprendizado. 
+                            Gamificação e analytics avançados para educadores.
+                        </p>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">Angular</span>
+                            <span class="portfolio-tag">Django</span>
+                            <span class="portfolio-tag">TensorFlow</span>
+                            <span class="portfolio-tag">WebGL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>

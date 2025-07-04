@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Insights - Gunic Company</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .blog-hero {
+            height: 60vh;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .blog-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+        
+        .blog-header {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .blog-content {
+            padding: 2rem;
+        }
+        
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+        
+        .blog-category {
+            background: rgba(0, 255, 255, 0.2);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .read-time {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .featured-post {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 128, 0.1));
+        }
+        
+        .featured-content {
+            padding: 3rem;
+        }
+        
+        .featured-image {
+            height: 400px;
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .featured-post {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <section class="blog-hero">
+        <div class="container">
+            <h1 class="section-title" data-aos="fade-up">Tech Insights</h1>
+            <p data-aos="fade-up" data-aos-delay="200" style="font-size: 1.2rem; color: var(--text-gray);">
+                Explorando o futuro da tecnologia e inovação
+            </p>
+        </div>
+    </section>
+
+    <section style="padding: 5rem 0; background: var(--bg-darker);">
+        <div class="container">
+            <div class="blog-grid">
+                <!-- Featured Post -->
+                <article class="blog-card featured-post" data-aos="fade-up">
+                    <div class="featured-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">IA & Machine Learning</span>
+                            <div class="read-time">
+                                <i class="fas fa-clock"></i>
+                                <span>8 min</span>
+                            </div>
+                        </div>
+                        <h2 style="color: var(--primary-color); font-size: 2rem; margin-bottom: 1rem;">
+                            O Futuro da IA na Medicina: Revolucionando Diagnósticos
+                        </h2>
+                        <p style="color: var(--text-gray); line-height: 1.6; margin-bottom: 1.5rem;">
+                            Como a inteligência artificial está transformando a medicina moderna, 
+                            desde diagnósticos mais precisos até tratamentos personalizados. 
+                            Exploramos as últimas inovações e o que esperar nos próximos anos.
+                        </p>
+                        <div style="color: var(--text-gray); font-size: 0.9rem;">
+                            <i class="fas fa-calendar"></i> 15 de Janeiro, 2024
+                        </div>
+                    </div>
+                    <div class="featured-image">
+                        <i class="fas fa-brain" style="font-size: 5rem; color: white;"></i>
+                    </div>
+                </article>
+
+                <!-- Regular Posts -->
+                <article class="blog-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="blog-header">
+                        <i class="fas fa-cloud" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">Cloud Computing</span>
+                            <div class="read-time">
+                                <i class="fas fa-clock"></i>
+                                <span>5 min</span>
+                            </div>
+                        </div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            Kubernetes vs Docker: Qual Escolher em 2024?
+                        </h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Análise comparativa das principais tecnologias de containerização 
+                            e orquestração para ajudar na escolha da melhor solução.
+                        </p>
+                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-top: 1rem;">
+                            <i class="fas fa-calendar"></i> 12 de Janeiro, 2024
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="blog-header">
+                        <i class="fas fa-shield-alt" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">Cybersecurity</span>
+                            <div class="read-time">
+                                <i class="fas fa-clock"></i>
+                                <span>6 min</span>
+                            </div>
+                        </div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            Zero Trust: A Nova Era da Segurança Digital
+                        </h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Como implementar uma arquitetura Zero Trust para proteger 
+                            sua empresa contra ameaças cibernéticas modernas.
+                        </p>
+                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-top: 1rem;">
+                            <i class="fas fa-calendar"></i> 10 de Janeiro, 2024
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="blog-header">
+                        <i class="fas fa-mobile-alt" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">Mobile Development</span>
+                            <div class="read-time">
+                                <i class="fas fa-clock"></i>
+                                <span>7 min</span>
+                            </div>
+                        </div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            Flutter vs React Native: Batalha dos Frameworks
+                        </h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Comparação detalhada entre os principais frameworks 
+                            de desenvolvimento mobile multiplataforma.
+                        </p>
+                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-top: 1rem;">
+                            <i class="fas fa-calendar"></i> 8 de Janeiro, 2024
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="blog-header">
+                        <i class="fas fa-database" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">Big Data</span>
+                            <div class="read-time">
+                                <i class="fas fa-clock"></i>
+                                <span>9 min</span>
+                            </div>
+                        </div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            Real-time Analytics: Processando Dados em Tempo Real
+                        </h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Técnicas e ferramentas para implementar análise de dados 
+                            em tempo real em aplicações de grande escala.
+                        </p>
+                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-top: 1rem;">
+                            <i class="fas fa-calendar"></i> 5 de Janeiro, 2024
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="blog-header">
+                        <i class="fas fa-vr-cardboard" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">AR/VR</span>
+                            <div class="read-time">
+                                <i class="fas fa-clock"></i>
+                                <span>6 min</span>
+                            </div>
+                        </div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            Metaverso Corporativo: Realidade ou Hype?
+                        </h3>
+                        <p style="color: var(--text-gray); line-height: 1.6;">
+                            Explorando as aplicações práticas de realidade virtual 
+                            e aumentada no ambiente corporativo moderno.
+                        </p>
+                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-top: 1rem;">
+                            <i class="fas fa-calendar"></i> 3 de Janeiro, 2024
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Add click handlers for blog cards
+        document.querySelectorAll('.blog-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Simulate blog post opening
+                const title = this.querySelector('h2, h3').textContent;
+                alert(`Abrindo artigo: "${title}"\n\nEm breve teremos o sistema completo de blog!`);
+            });
+        });
+    </script>
+</body>
+</html>
