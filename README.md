@@ -18,6 +18,13 @@ Uma landing page moderna e futurística para empresa de tecnologia, desenvolvida
 - **Particles.js**: Efeitos de partículas interativas
 - **Font Awesome**: Ícones modernos
 
+#### 🤖 Integração de IA
+- **Groq API**: IA conversacional ultra-rápida (Llama 3.1)
+- **Chatbot Inteligente**: Respostas contextuais em português
+- **Gerador de Código**: Criação automática de código
+- **Análise de Texto**: Sentimentos e palavras-chave
+- **Review de Código**: Sugestões e otimizações
+
 #### Recursos Implementados
 - **Carrossel de Projetos**: Showcase interativo dos trabalhos
 - **Banner Dinâmico**: Notícias rotativas automáticas
@@ -55,20 +62,35 @@ Uma landing page moderna e futurística para empresa de tecnologia, desenvolvida
 
 ```
 landing-page/
-├── index.html          # Página principal
+├── index.html          # Página principal com chatbot IA
 ├── portfolio.html      # Página de portfólio
 ├── blog.html          # Blog de tecnologia
+├── ai-playground.html  # Ferramentas interativas de IA
 ├── style.css          # Estilos principais
 ├── script.js          # JavaScript principal
+├── ai-config.js       # Configuração das APIs de IA
+├── SETUP-IA.md        # Guia de configuração da IA
 └── README.md          # Documentação
 ```
 
 ## 🚀 Como Usar
 
+### Uso Básico (IA Simulada)
 1. **Clone ou baixe** os arquivos
 2. **Abra** `index.html` em um navegador moderno
 3. **Navegue** pelas seções e páginas
-4. **Personalize** conforme necessário
+4. **Teste** o chatbot e ferramentas (modo demo)
+
+### 🤖 Ativando IA Real (Recomendado)
+1. **Leia** o arquivo `SETUP-IA.md`
+2. **Obtenha** uma API key gratuita (Groq recomendado)
+3. **Configure** em `ai-config.js`
+4. **Aproveite** a IA real funcionando!
+
+**📋 APIs Gratuitas Recomendadas:**
+- **Groq**: 30 req/min grátis (mais rápida)
+- **Hugging Face**: Limite generoso
+- **Together AI**: $25 créditos grátis
 
 ## 🎨 Seções da Landing Page
 

@@ -26,6 +26,7 @@
                 <li><a href="#about">Sobre</a></li>
                 <li><a href="portfolio.html">Portfólio</a></li>
                 <li><a href="blog.html">Blog</a></li>
+                <li><a href="ai-playground.html" class="ai-link">🤖 AI Lab</a></li>
                 <li><a href="#contact">Contato</a></li>
             </ul>
             <div class="hamburger">
@@ -320,6 +321,94 @@
         </div>
     </section>
 
+    <!-- AI Chatbot -->
+    <div class="ai-chatbot" id="aiChatbot">
+        <div class="chatbot-header">
+            <div class="chatbot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="chatbot-info">
+                <h4>GUNIC AI Assistant</h4>
+                <span class="status online">Online</span>
+            </div>
+            <button class="chatbot-close" onclick="toggleChatbot()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <p>Olá! 👋 Sou a IA da GUNIC. Como posso ajudar você hoje?</p>
+                    <div class="quick-actions">
+                        <button onclick="sendQuickMessage('Quais são seus serviços?')">Serviços</button>
+                        <button onclick="sendQuickMessage('Quero um orçamento')">Orçamento</button>
+                        <button onclick="sendQuickMessage('Fale sobre IA')">Sobre IA</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatKeyPress(event)">
+            <button onclick="sendMessage()" class="send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        <div class="chatbot-typing" id="typingIndicator" style="display: none;">
+            <div class="typing-dots">
+                <span></span><span></span><span></span>
+            </div>
+            <span>IA está digitando...</span>
+        </div>
+    </div>
+
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()" id="chatbotToggle">
+        <i class="fas fa-robot"></i>
+        <span class="notification-badge">1</span>
+    </button>
+
+    <!-- AI Code Generator Modal -->
+    <div class="ai-modal" id="codeGeneratorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-code"></i> Gerador de Código IA</h3>
+                <button onclick="closeModal('codeGeneratorModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="code-input">
+                    <label>Descreva o que você quer criar:</label>
+                    <textarea id="codePrompt" placeholder="Ex: Criar uma função JavaScript que valida CPF..."></textarea>
+                    <div class="code-options">
+                        <select id="codeLanguage">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="react">React</option>
+                        </select>
+                        <button onclick="generateCode()" class="btn btn-primary">
+                            <i class="fas fa-magic"></i> Gerar Código
+                        </button>
+                    </div>
+                </div>
+                <div class="code-output" id="codeOutput" style="display: none;">
+                    <div class="code-header">
+                        <span>Código Gerado:</span>
+                        <button onclick="copyCode()" class="copy-btn">
+                            <i class="fas fa-copy"></i> Copiar
+                        </button>
+                    </div>
+                    <pre><code id="generatedCode"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
@@ -371,6 +460,20 @@
                     </ul>
                 </div>
                 <div class="footer-section">
+                    <h4>IA Tools</h4>
+                    <div class="ai-tools">
+                        <button onclick="openModal('codeGeneratorModal')" class="ai-tool-btn">
+                            <i class="fas fa-code"></i> Gerador de Código
+                        </button>
+                        <button onclick="toggleChatbot()" class="ai-tool-btn">
+                            <i class="fas fa-robot"></i> Chat IA
+                        </button>
+                        <a href="ai-playground.html" class="ai-tool-btn">
+                            <i class="fas fa-flask"></i> AI Playground
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
                     <h4>Redes Sociais</h4>
                     <div class="social-links">
                         <a href="#">LinkedIn</a>
@@ -389,6 +492,8 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="env-config.js"></script>
+    <script src="ai-config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

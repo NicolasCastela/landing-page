@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Playground - Gunic Company</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .playground-hero {
+            height: 60vh;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .ai-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .ai-tool-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .ai-tool-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+        
+        .tool-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .demo-area {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 0.8rem;
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .result-area {
+            background: var(--bg-darker);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            min-height: 100px;
+            display: none;
+        }
+        
+        .live-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .live-demo {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <section class="playground-hero">
+        <div class="container">
+            <h1 class="section-title" data-aos="fade-up">AI Playground</h1>
+            <p data-aos="fade-up" data-aos-delay="200" style="font-size: 1.2rem; color: var(--text-gray);">
+                Experimente nossas ferramentas de IA em tempo real
+            </p>
+        </div>
+    </section>
+
+    <section style="padding: 5rem 0; background: var(--bg-darker);">
+        <div class="container">
+            <div class="ai-tools-grid">
+                <div class="ai-tool-card" data-aos="fade-up" onclick="showTool('textAnalysis')">
+                    <div class="tool-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Análise de Texto IA</h3>
+                    <p style="color: var(--text-gray);">
+                        Analise sentimentos, extraia palavras-chave e obtenha insights de qualquer texto.
+                    </p>
+                </div>
+
+                <div class="ai-tool-card" data-aos="fade-up" data-aos-delay="100" onclick="showTool('codeReview')">
+                    <div class="tool-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Review de Código IA</h3>
+                    <p style="color: var(--text-gray);">
+                        Nossa IA analisa seu código e sugere melhorias, otimizações e correções.
+                    </p>
+                </div>
+
+                <div class="ai-tool-card" data-aos="fade-up" data-aos-delay="200" onclick="showTool('dataPredict')">
+                    <div class="tool-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Predição de Dados</h3>
+                    <p style="color: var(--text-gray);">
+                        Insira dados históricos e nossa IA fará predições baseadas em machine learning.
+                    </p>
+                </div>
+
+                <div class="ai-tool-card" data-aos="fade-up" data-aos-delay="300" onclick="showTool('imageAnalysis')">
+                    <div class="tool-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Análise de Imagem</h3>
+                    <p style="color: var(--text-gray);">
+                        Upload uma imagem e nossa IA identificará objetos, pessoas e características.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Demo Areas -->
+            <div id="textAnalysis" class="demo-area" style="display: none;">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem;">
+                    <i class="fas fa-brain"></i> Análise de Texto IA
+                </h3>
+                <div class="live-demo">
+                    <div>
+                        <div class="input-group">
+                            <label>Cole seu texto aqui:</label>
+                            <textarea id="textInput" rows="8" placeholder="Digite ou cole o texto que deseja analisar..."></textarea>
+                        </div>
+                        <button onclick="analyzeText()" class="btn btn-primary">
+                            <i class="fas fa-magic"></i> Analisar Texto
+                        </button>
+                    </div>
+                    <div>
+                        <div class="result-area" id="textResult">
+                            <h4 style="color: var(--primary-color);">Resultados da Análise:</h4>
+                            <div id="textAnalysisOutput"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="codeReview" class="demo-area" style="display: none;">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem;">
+                    <i class="fas fa-code"></i> Review de Código IA
+                </h3>
+                <div class="live-demo">
+                    <div>
+                        <div class="input-group">
+                            <label>Linguagem:</label>
+                            <select id="codeLanguageSelect">
+                                <option value="javascript">JavaScript</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Cole seu código:</label>
+                            <textarea id="codeInput" rows="10" placeholder="Cole o código que deseja revisar..."></textarea>
+                        </div>
+                        <button onclick="reviewCode()" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Revisar Código
+                        </button>
+                    </div>
+                    <div>
+                        <div class="result-area" id="codeResult">
+                            <h4 style="color: var(--primary-color);">Sugestões da IA:</h4>
+                            <div id="codeReviewOutput"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dataPredict" class="demo-area" style="display: none;">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem;">
+                    <i class="fas fa-chart-line"></i> Predição de Dados
+                </h3>
+                <div class="live-demo">
+                    <div>
+                        <div class="input-group">
+                            <label>Tipo de Predição:</label>
+                            <select id="predictionType">
+                                <option value="sales">Vendas</option>
+                                <option value="stock">Ações</option>
+                                <option value="weather">Clima</option>
+                                <option value="traffic">Tráfego</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Dados Históricos (separados por vírgula):</label>
+                            <input type="text" id="historicalData" placeholder="100, 120, 95, 130, 110, 140...">
+                        </div>
+                        <div class="input-group">
+                            <label>Períodos para Prever:</label>
+                            <input type="number" id="predictPeriods" value="5" min="1" max="20">
+                        </div>
+                        <button onclick="predictData()" class="btn btn-primary">
+                            <i class="fas fa-crystal-ball"></i> Fazer Predição
+                        </button>
+                    </div>
+                    <div>
+                        <div class="result-area" id="predictionResult">
+                            <h4 style="color: var(--primary-color);">Predições da IA:</h4>
+                            <div id="predictionOutput"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="imageAnalysis" class="demo-area" style="display: none;">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem;">
+                    <i class="fas fa-image"></i> Análise de Imagem IA
+                </h3>
+                <div class="live-demo">
+                    <div>
+                        <div class="input-group">
+                            <label>Upload de Imagem:</label>
+                            <input type="file" id="imageInput" accept="image/*" onchange="previewImage()">
+                        </div>
+                        <div id="imagePreview" style="margin: 1rem 0; text-align: center;"></div>
+                        <button onclick="analyzeImage()" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> Analisar Imagem
+                        </button>
+                    </div>
+                    <div>
+                        <div class="result-area" id="imageResult">
+                            <h4 style="color: var(--primary-color);">Análise da IA:</h4>
+                            <div id="imageAnalysisOutput"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="env-config.js"></script>
+    <script src="ai-config.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+        
+        // Show AI status on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAIConfig();
+            showAIStatus();
+            
+            // Add AI status indicator
+            const statusIndicator = document.createElement('div');
+            statusIndicator.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: ${isAIConfigured() ? 'rgba(0,255,0,0.8)' : 'rgba(255,165,0,0.8)'};
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                z-index: 1000;
+                font-weight: bold;
+            `;
+            statusIndicator.textContent = isAIConfigured() ? '🤖 IA Real Ativa' : '🟡 IA Demo';
+            document.body.appendChild(statusIndicator);
+        });
+
+        function showTool(toolId) {
+            // Hide all demo areas
+            document.querySelectorAll('.demo-area').forEach(area => {
+                area.style.display = 'none';
+            });
+            
+            // Show selected tool
+            document.getElementById(toolId).style.display = 'block';
+            
+            // Scroll to demo area
+            document.getElementById(toolId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        async function analyzeText() {
+            const text = document.getElementById('textInput').value;
+            const resultArea = document.getElementById('textResult');
+            const output = document.getElementById('textAnalysisOutput');
+            
+            if (!text.trim()) {
+                alert('Por favor, insira um texto para análise!');
+                return;
+            }
+            
+            resultArea.style.display = 'block';
+            output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analisando com IA...';
+            
+            try {
+                let analysis;
+                if (isAIConfigured()) {
+                    const aiResult = await analyzeTextWithAI(text);
+                    analysis = formatAITextAnalysis(aiResult, text);
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    analysis = simulateTextAnalysis(text);
+                }
+                output.innerHTML = analysis;
+            } catch (error) {
+                output.innerHTML = 'Erro na análise. Tente novamente.';
+                console.error('Text analysis error:', error);
+            }
+        }
+
+        function simulateTextAnalysis(text) {
+            const words = text.split(/\s+/).length;
+            const chars = text.length;
+            const sentences = text.split(/[.!?]+/).length - 1;
+            
+            // Simulate sentiment analysis
+            const positiveWords = ['bom', 'ótimo', 'excelente', 'maravilhoso', 'incrível', 'fantástico'];
+            const negativeWords = ['ruim', 'péssimo', 'terrível', 'horrível', 'odiar'];
+            
+            let sentiment = 'Neutro';
+            const lowerText = text.toLowerCase();
+            
+            if (positiveWords.some(word => lowerText.includes(word))) {
+                sentiment = 'Positivo 😊';
+            } else if (negativeWords.some(word => lowerText.includes(word))) {
+                sentiment = 'Negativo 😞';
+            }
+            
+            return `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Palavras:</strong> ${words}
+                    </div>
+                    <div style="background: rgba(255,0,128,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Caracteres:</strong> ${chars}
+                    </div>
+                    <div style="background: rgba(124,58,237,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Frases:</strong> ${sentences}
+                    </div>
+                </div>
+                <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong>Sentimento:</strong> ${sentiment}
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                    <strong>Palavras-chave identificadas:</strong><br>
+                    ${extractKeywords(text).map(word => `<span style="background: rgba(0,255,255,0.2); padding: 0.2rem 0.5rem; border-radius: 12px; margin: 0.2rem; display: inline-block;">${word}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        function extractKeywords(text) {
+            const words = text.toLowerCase().split(/\W+/);
+            const stopWords = ['o', 'a', 'de', 'para', 'com', 'em', 'um', 'uma', 'e', 'ou', 'que', 'do', 'da', 'no', 'na'];
+            const filtered = words.filter(word => word.length > 3 && !stopWords.includes(word));
+            const frequency = {};
+            
+            filtered.forEach(word => {
+                frequency[word] = (frequency[word] || 0) + 1;
+            });
+            
+            return Object.entries(frequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8)
+                .map(([word]) => word);
+        }
+        
+        // Format AI text analysis results
+        function formatAITextAnalysis(aiResult, originalText) {
+            const words = originalText.split(/\s+/).length;
+            const chars = originalText.length;
+            const sentences = originalText.split(/[.!?]+/).length - 1;
+            
+            return `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Palavras:</strong> ${words}
+                    </div>
+                    <div style="background: rgba(255,0,128,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Caracteres:</strong> ${chars}
+                    </div>
+                    <div style="background: rgba(124,58,237,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Score IA:</strong> ${aiResult.score}/100
+                    </div>
+                </div>
+                <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong>Sentimento (IA):</strong> ${aiResult.sentiment === 'positivo' ? 'Positivo 😊' : aiResult.sentiment === 'negativo' ? 'Negativo 😞' : 'Neutro 😐'}
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong>Resumo IA:</strong> ${aiResult.summary}
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                    <strong>Palavras-chave (IA):</strong><br>
+                    ${aiResult.keywords.map(word => `<span style="background: rgba(0,255,255,0.2); padding: 0.2rem 0.5rem; border-radius: 12px; margin: 0.2rem; display: inline-block;">${word}</span>`).join('')}
+                </div>
+            `;
+        }
+        
+        // Format AI code review results
+        function formatAICodeReview(aiResult) {
+            return `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Score IA:</strong> ${aiResult.score}/100
+                    </div>
+                    <div style="background: rgba(255,0,128,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Complexidade:</strong> ${aiResult.complexity}/10
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong>Sugestões da IA:</strong><br><br>
+                    ${aiResult.suggestions.map(suggestion => `<div style="margin-bottom: 0.5rem;">• ${suggestion}</div>`).join('')}
+                </div>
+                ${aiResult.security.length > 0 ? `
+                <div style="background: rgba(255,0,128,0.1); padding: 1rem; border-radius: 8px;">
+                    <strong>🔒 Segurança:</strong><br><br>
+                    ${aiResult.security.map(issue => `<div style="margin-bottom: 0.5rem;">⚠️ ${issue}</div>`).join('')}
+                </div>
+                ` : ''}
+            `;
+        }
+
+        async function reviewCode() {
+            const code = document.getElementById('codeInput').value;
+            const language = document.getElementById('codeLanguageSelect').value;
+            const resultArea = document.getElementById('codeResult');
+            const output = document.getElementById('codeReviewOutput');
+            
+            if (!code.trim()) {
+                alert('Por favor, insira código para revisão!');
+                return;
+            }
+            
+            resultArea.style.display = 'block';
+            output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Revisando com IA...';
+            
+            try {
+                let review;
+                if (isAIConfigured()) {
+                    const aiResult = await reviewCodeWithAI(code, language);
+                    review = formatAICodeReview(aiResult);
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 2500));
+                    review = simulateCodeReview(code, language);
+                }
+                output.innerHTML = review;
+            } catch (error) {
+                output.innerHTML = 'Erro na revisão. Tente novamente.';
+                console.error('Code review error:', error);
+            }
+        }
+
+        function simulateCodeReview(code, language) {
+            const suggestions = [
+                '✅ Código bem estruturado e legível',
+                '⚠️ Considere adicionar comentários explicativos',
+                '🔧 Sugiro usar const/let ao invés de var (JavaScript)',
+                '🚀 Performance pode ser otimizada com cache',
+                '🛡️ Adicione validação de entrada para maior segurança',
+                '📝 Considere extrair funções menores para melhor modularidade',
+                '🎯 Nomes de variáveis poderiam ser mais descritivos'
+            ];
+            
+            const randomSuggestions = suggestions
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 4);
+            
+            const complexity = Math.floor(Math.random() * 10) + 1;
+            const score = Math.floor(Math.random() * 30) + 70;
+            
+            return `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Score de Qualidade:</strong> ${score}/100
+                    </div>
+                    <div style="background: rgba(255,0,128,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Complexidade:</strong> ${complexity}/10
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                    <strong>Sugestões da IA:</strong><br><br>
+                    ${randomSuggestions.map(suggestion => `<div style="margin-bottom: 0.5rem;">${suggestion}</div>`).join('')}
+                </div>
+            `;
+        }
+
+        function predictData() {
+            const data = document.getElementById('historicalData').value;
+            const periods = document.getElementById('predictPeriods').value;
+            const type = document.getElementById('predictionType').value;
+            const resultArea = document.getElementById('predictionResult');
+            const output = document.getElementById('predictionOutput');
+            
+            if (!data.trim()) {
+                alert('Por favor, insira dados históricos!');
+                return;
+            }
+            
+            resultArea.style.display = 'block';
+            output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando predições...';
+            
+            setTimeout(() => {
+                const prediction = simulateDataPrediction(data, periods, type);
+                output.innerHTML = prediction;
+            }, 3000);
+        }
+
+        function simulateDataPrediction(data, periods, type) {
+            const values = data.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+            const predictions = [];
+            
+            // Simple trend calculation
+            const trend = (values[values.length - 1] - values[0]) / values.length;
+            let lastValue = values[values.length - 1];
+            
+            for (let i = 0; i < periods; i++) {
+                const randomFactor = (Math.random() - 0.5) * 0.2;
+                lastValue += trend + (lastValue * randomFactor);
+                predictions.push(Math.round(lastValue * 100) / 100);
+            }
+            
+            return `
+                <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong>Dados Originais:</strong> ${values.join(', ')}
+                </div>
+                <div style="background: rgba(255,0,128,0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong>Predições (${periods} períodos):</strong> ${predictions.join(', ')}
+                </div>
+                <div style="background: rgba(124,58,237,0.1); padding: 1rem; border-radius: 8px;">
+                    <strong>Tendência:</strong> ${trend > 0 ? 'Crescimento' : trend < 0 ? 'Declínio' : 'Estável'} 
+                    (${Math.abs(trend).toFixed(2)} por período)
+                </div>
+            `;
+        }
+
+        function previewImage() {
+            const input = document.getElementById('imageInput');
+            const preview = document.getElementById('imagePreview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid rgba(0,255,255,0.3);">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function analyzeImage() {
+            const input = document.getElementById('imageInput');
+            const resultArea = document.getElementById('imageResult');
+            const output = document.getElementById('imageAnalysisOutput');
+            
+            if (!input.files || !input.files[0]) {
+                alert('Por favor, selecione uma imagem!');
+                return;
+            }
+            
+            resultArea.style.display = 'block';
+            output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analisando imagem...';
+            
+            setTimeout(() => {
+                const analysis = simulateImageAnalysis();
+                output.innerHTML = analysis;
+            }, 3000);
+        }
+
+        function simulateImageAnalysis() {
+            const objects = ['pessoa', 'carro', 'árvore', 'prédio', 'animal', 'objeto'];
+            const colors = ['azul', 'verde', 'vermelho', 'amarelo', 'preto', 'branco'];
+            const emotions = ['feliz', 'neutro', 'sério', 'surpreso'];
+            
+            const detectedObjects = objects.sort(() => Math.random() - 0.5).slice(0, 3);
+            const dominantColors = colors.sort(() => Math.random() - 0.5).slice(0, 2);
+            const confidence = Math.floor(Math.random() * 20) + 80;
+            
+            return `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: rgba(0,255,255,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Confiança:</strong> ${confidence}%
+                    </div>
+                    <div style="background: rgba(255,0,128,0.1); padding: 1rem; border-radius: 8px;">
+                        <strong>Resolução:</strong> HD
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong>Objetos Detectados:</strong><br>
+                    ${detectedObjects.map(obj => `<span style="background: rgba(0,255,255,0.2); padding: 0.3rem 0.8rem; border-radius: 12px; margin: 0.3rem; display: inline-block;">${obj}</span>`).join('')}
+                </div>
+                <div style="background: rgba(124,58,237,0.1); padding: 1rem; border-radius: 8px;">
+                    <strong>Cores Dominantes:</strong><br>
+                    ${dominantColors.map(color => `<span style="background: rgba(124,58,237,0.2); padding: 0.3rem 0.8rem; border-radius: 12px; margin: 0.3rem; display: inline-block;">${color}</span>`).join('')}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

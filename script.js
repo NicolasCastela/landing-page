@@ -351,6 +351,11 @@ function showNotification(message, type = 'info') {
             border: 1px solid rgba(255, 0, 128, 0.3);
         }
         
+        .notification.info {
+            background: rgba(124, 58, 237, 0.9);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        
         .notification-content {
             display: flex;
             align-items: center;
@@ -382,7 +387,7 @@ function showNotification(message, type = 'info') {
     }, 3500);
 }
 
-// Enhanced form submission with better UX
+// Enhanced form submission with AI integration
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -409,11 +414,28 @@ if (contactForm) {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
         submitBtn.disabled = true;
         
+        // Simulate AI analysis of the message
         setTimeout(() => {
-            showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
+            showNotification('Mensagem enviada com sucesso! Nossa IA analisou sua solicitação e nossa equipe entrará em contato em breve.', 'success');
+            
+            // Add to chatbot context
+            conversationHistory.push({
+                sender: 'system',
+                text: `Novo contato: ${name} (${email}) - ${message}`,
+                timestamp: new Date()
+            });
+            
             contactForm.reset();
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
+            
+            // Suggest opening chatbot
+            setTimeout(() => {
+                if (!chatbotOpen) {
+                    showNotification('💬 Quer continuar a conversa? Nossa IA pode responder suas dúvidas agora!', 'info');
+                    document.getElementById('chatbotToggle').style.animation = 'pulse 1s infinite';
+                }
+            }, 3000);
         }, 2000);
     });
 }
@@ -745,6 +767,426 @@ window.addEventListener('resize', throttle(() => {
     }
 }, 250));
 
+// AI Chatbot Functionality
+let chatbotOpen = false;
+let conversationHistory = [];
+
+// Toggle chatbot visibility
+function toggleChatbot() {
+    const chatbot = document.getElementById('aiChatbot');
+    const toggle = document.getElementById('chatbotToggle');
+    
+    chatbotOpen = !chatbotOpen;
+    
+    if (chatbotOpen) {
+        chatbot.style.display = 'flex';
+        chatbot.style.animation = 'slideInUp 0.3s ease';
+        toggle.querySelector('.notification-badge').style.display = 'none';
+    } else {
+        chatbot.style.animation = 'slideOutDown 0.3s ease';
+        setTimeout(() => {
+            chatbot.style.display = 'none';
+        }, 300);
+    }
+}
+
+// Handle chat input
+function handleChatKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+// Send message function
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    addMessage(message, 'user');
+    input.value = '';
+    
+    // Show typing indicator
+    showTypingIndicator();
+    
+    try {
+        let response;
+        if (isAIConfigured()) {
+            // Use real AI
+            response = await callAI(message);
+        } else {
+            // Fallback to simulated response
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            response = generateAIResponse(message);
+        }
+        
+        hideTypingIndicator();
+        addMessage(response, 'bot');
+        
+    } catch (error) {
+        hideTypingIndicator();
+        addMessage('Desculpe, ocorreu um erro. Tente novamente! 🤖', 'bot');
+        console.error('Chat error:', error);
+    }
+}
+
+// Quick message function
+function sendQuickMessage(message) {
+    document.getElementById('chatInput').value = message;
+    sendMessage();
+}
+
+// Add message to chat
+function addMessage(text, sender) {
+    const messagesContainer = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message`;
+    
+    const avatar = sender === 'bot' ? '<i class="fas fa-robot"></i>' : '<i class="fas fa-user"></i>';
+    
+    messageDiv.innerHTML = `
+        <div class="message-avatar">
+            ${avatar}
+        </div>
+        <div class="message-content">
+            <p>${text}</p>
+        </div>
+    `;
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    // Store in conversation history
+    conversationHistory.push({ sender, text, timestamp: new Date() });
+}
+
+// Show/hide typing indicator
+function showTypingIndicator() {
+    document.getElementById('typingIndicator').style.display = 'flex';
+}
+
+function hideTypingIndicator() {
+    document.getElementById('typingIndicator').style.display = 'none';
+}
+
+// AI Response Generator (Simulated)
+function generateAIResponse(userMessage) {
+    const message = userMessage.toLowerCase();
+    
+    // Predefined responses based on keywords
+    const responses = {
+        'serviços': 'Oferecemos serviços de IA & Machine Learning, Sistemas Médicos, Apps Mobile e Cloud Solutions. Qual área te interessa mais? 🚀',
+        'orçamento': 'Ótimo! Para criar um orçamento personalizado, preciso saber mais sobre seu projeto. Pode me contar sobre: \n• Tipo de solução desejada\n• Prazo estimado\n• Orçamento aproximado\n\nOu prefere agendar uma conversa? 📞',
+        'ia': 'A Inteligência Artificial é nossa especialidade! 🤖 Desenvolvemos:\n• Sistemas de diagnóstico médico\n• Chatbots inteligentes\n• Análise preditiva\n• Computer Vision\n• NLP (Processamento de Linguagem Natural)\n\nQual aplicação de IA você tem em mente?',
+        'preço': 'Nossos preços variam conforme a complexidade do projeto. Temos opções desde R$ 5.000 para MVPs até projetos enterprise de R$ 100.000+. Quer discutir seu caso específico? 💰',
+        'contato': 'Você pode entrar em contato conosco:\n📧 contato@gunic.com\n📱 +55 (11) 99999-9999\n📍 São Paulo, Brasil\n\nOu use o formulário na seção de contato! 😊',
+        'portfolio': 'Confira alguns dos nossos projetos:\n• MedIA - Diagnóstico por IA (95% precisão)\n• HealthConnect - Telemedicina\n• DataViz Pro - Analytics em tempo real\n• SecureCloud - Segurança na nuvem\n\nQuer ver mais detalhes de algum projeto? 📂',
+        'tecnologia': 'Trabalhamos com tecnologias de ponta:\n• Python, JavaScript, React, Node.js\n• TensorFlow, PyTorch para IA\n• AWS, Azure, Google Cloud\n• Docker, Kubernetes\n• MongoDB, PostgreSQL\n\nQual tecnologia te interessa? ⚡',
+        'inovação': 'Estamos sempre inovando! 🚀 Nossos projetos futuristas incluem:\n• Realidade Virtual Médica\n• IA Genética Personalizada\n• IoT Espacial\n• Neural Interface\n• Blockchain Quântico\n\nQual inovação te chama atenção?'
+    };
+    
+    // Find matching response
+    for (const [keyword, response] of Object.entries(responses)) {
+        if (message.includes(keyword)) {
+            return response;
+        }
+    }
+    
+    // Default responses
+    const defaultResponses = [
+        'Interessante! Pode me dar mais detalhes sobre isso? 🤔',
+        'Entendi! Como posso ajudar você com isso? 💡',
+        'Ótima pergunta! Vou conectar você com nossa equipe especializada. Enquanto isso, posso te ajudar com mais alguma coisa? 🎯',
+        'Hmm, não tenho certeza sobre isso. Que tal falarmos com um de nossos especialistas? Posso agendar uma conversa para você! 📅',
+        'Posso te ajudar melhor se você me contar mais sobre seu projeto ou necessidade específica. O que você tem em mente? 🚀'
+    ];
+    
+    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+}
+
+// Modal functions
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Code Generator with Real AI
+async function generateCode() {
+    const prompt = document.getElementById('codePrompt').value;
+    const language = document.getElementById('codeLanguage').value;
+    const output = document.getElementById('codeOutput');
+    const codeElement = document.getElementById('generatedCode');
+    
+    if (!prompt.trim()) {
+        showNotification('Por favor, descreva o que você quer criar!', 'error');
+        return;
+    }
+    
+    // Show loading
+    codeElement.textContent = 'Gerando código com IA... 🤖';
+    output.style.display = 'block';
+    
+    try {
+        let generatedCode;
+        if (isAIConfigured()) {
+            generatedCode = await generateCodeWithAI(prompt, language);
+        } else {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            generatedCode = simulateCodeGeneration(prompt, language);
+        }
+        
+        codeElement.textContent = generatedCode;
+        codeElement.style.animation = 'fadeIn 0.5s ease';
+        
+        showNotification('Código gerado com sucesso! 🎉', 'success');
+        
+    } catch (error) {
+        codeElement.textContent = 'Erro ao gerar código. Tente novamente.';
+        showNotification('Erro na geração de código', 'error');
+        console.error('Code generation error:', error);
+    }
+}
+
+// Simulate code generation based on prompt and language
+function simulateCodeGeneration(prompt, language) {
+    const codeTemplates = {
+        javascript: {
+            'validar cpf': `function validarCPF(cpf) {
+    cpf = cpf.replace(/[^\d]/g, '');
+    
+    if (cpf.length !== 11 || /^(\d)\\1{10}$/.test(cpf)) {
+        return false;
+    }
+    
+    let soma = 0;
+    for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf[i]) * (10 - i);
+    }
+    
+    let resto = soma % 11;
+    let digito1 = resto < 2 ? 0 : 11 - resto;
+    
+    if (parseInt(cpf[9]) !== digito1) return false;
+    
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf[i]) * (11 - i);
+    }
+    
+    resto = soma % 11;
+    let digito2 = resto < 2 ? 0 : 11 - resto;
+    
+    return parseInt(cpf[10]) === digito2;
+}`,
+            'api fetch': `async function fetchData(url) {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(\`HTTP error! status: \${response.status}\`);
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+        throw error;
+    }
+}`,
+            default: `// Código JavaScript gerado pela IA da GUNIC
+// Baseado em: "${prompt}"
+
+function solucaoPersonalizada() {
+    // TODO: Implementar lógica específica
+    console.log('Funcionalidade em desenvolvimento...');
+    
+    // Estrutura base para sua solução
+    const config = {
+        // Configurações aqui
+    };
+    
+    // Lógica principal
+    return {
+        executar: () => {
+            // Sua implementação aqui
+        },
+        config
+    };
+}
+
+// Uso:
+// const solucao = solucaoPersonalizada();
+// solucao.executar();`
+        },
+        python: {
+            default: `# Código Python gerado pela IA da GUNIC
+# Baseado em: "${prompt}"
+
+def solucao_personalizada():
+    """Função gerada automaticamente pela IA"""
+    
+    # TODO: Implementar lógica específica
+    print("Funcionalidade em desenvolvimento...")
+    
+    # Estrutura base para sua solução
+    config = {
+        # Configurações aqui
+    }
+    
+    return config
+
+if __name__ == "__main__":
+    resultado = solucao_personalizada()
+    print(f"Resultado: {resultado}")`
+        },
+        html: {
+            default: `<!-- HTML gerado pela IA da GUNIC -->
+<!-- Baseado em: "${prompt}" -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Personalizada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sua Página Personalizada</h1>
+        <p>Conteúdo gerado automaticamente pela IA da GUNIC.</p>
+        <!-- Adicione seu conteúdo aqui -->
+    </div>
+</body>
+</html>`
+        }
+    };
+    
+    const langTemplates = codeTemplates[language] || codeTemplates.javascript;
+    
+    // Try to find a matching template
+    for (const [key, template] of Object.entries(langTemplates)) {
+        if (prompt.toLowerCase().includes(key)) {
+            return template;
+        }
+    }
+    
+    return langTemplates.default || `// Código ${language} personalizado\n// Baseado em: "${prompt}"\n\n// TODO: Implementar funcionalidade`;
+}
+
+// Copy code function
+function copyCode() {
+    const code = document.getElementById('generatedCode').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        showNotification('Código copiado para a área de transferência! 📋', 'success');
+    }).catch(() => {
+        showNotification('Erro ao copiar código', 'error');
+    });
+}
+
+// Voice synthesis (Text-to-Speech)
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        speechSynthesis.speak(utterance);
+    }
+}
+
+// Add voice button to bot messages
+function addVoiceButton(messageElement) {
+    const voiceBtn = document.createElement('button');
+    voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    voiceBtn.className = 'voice-btn';
+    voiceBtn.onclick = () => {
+        const text = messageElement.querySelector('p').textContent;
+        speakText(text);
+    };
+    messageElement.querySelector('.message-content').appendChild(voiceBtn);
+}
+
+// Initialize AI features
+document.addEventListener('DOMContentLoaded', () => {
+    // Carregar configuração de IA
+    loadAIConfig();
+    
+    // Show AI status
+    showAIStatus();
+    // Add CSS for voice button
+    const voiceStyles = `
+        .voice-btn {
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-btn:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+        }
+        
+        @keyframes slideInUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutDown {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100%); opacity: 0; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    `;
+    
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = voiceStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Show notification about AI features
+    setTimeout(() => {
+        if (!chatbotOpen) {
+            const aiStatus = isAIConfigured() ? 'IA Real' : 'IA Demo';
+            showNotification(`🤖 ${aiStatus} disponível! Clique no botão para conversar`, 'info');
+        }
+    }, 5000);
+});
+
 console.log('🚀 GUNIC Company - Landing Page Loaded Successfully!');
 console.log('💡 Enhanced with modern libraries and effects');
 console.log('🎨 Featuring: AOS, Swiper, Particles.js, and custom animations');
+console.log('🤖 NEW: AI Chatbot and Code Generator integrated!');

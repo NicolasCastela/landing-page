@@ -1,0 +1,29 @@
+# 🔒 Arquivos sensíveis - NÃO commitar
+.env
+.env.local
+.env.production
+SUAS-KEYS.md
+
+# API Keys
+*api-key*
+*secret*
+*keys*
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependências
+node_modules/
+
+# Build
+dist/
+build/
+
+# Cache
+.cache/
+.parcel-cache/
+
+# OS
+.DS_Store
+Thumbs.db
