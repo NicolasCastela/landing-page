@@ -35,7 +35,7 @@ class MetaverseEngine {
 
     async init() {
         this.showLoading();
-        await this.setupThreeJS();
+        this.setupThreeJS();
         this.setupPhysics();
         this.setupControls();
         this.setupVoice();
@@ -48,11 +48,17 @@ class MetaverseEngine {
     }
 
     showLoading() {
-        document.getElementById('loadingWorld').classList.add('active');
+        const loading = document.getElementById('loadingWorld');
+        if (loading) {
+            loading.classList.remove('hidden');
+        }
     }
 
     hideLoading() {
-        document.getElementById('loadingWorld').classList.remove('active');
+        const loading = document.getElementById('loadingWorld');
+        if (loading) {
+            loading.classList.add('hidden');
+        }
     }
 
     setupThreeJS() {
@@ -83,8 +89,6 @@ class MetaverseEngine {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(50, 50, 50);
         directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.width = 2048;
-        directionalLight.shadow.mapSize.height = 2048;
         this.scene.add(directionalLight);
         
         // Resize handler
@@ -151,9 +155,7 @@ class MetaverseEngine {
         // Ground
         const groundGeometry = new THREE.PlaneGeometry(200, 200);
         const groundMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0x90EE90,
-            transparent: true,
-            opacity: 0.8
+            color: 0x90EE90
         });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = -Math.PI / 2;
@@ -167,79 +169,54 @@ class MetaverseEngine {
         groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
         this.world.add(groundBody);
         
-        // Hills
-        for (let i = 0; i < 10; i++) {
-            const hillGeometry = new THREE.SphereGeometry(Math.random() * 5 + 2, 8, 8);
+        // Simple hills
+        for (let i = 0; i < 5; i++) {
+            const hillGeometry = new THREE.SphereGeometry(3, 8, 8);
             const hillMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
             const hill = new THREE.Mesh(hillGeometry, hillMaterial);
             hill.position.set(
-                (Math.random() - 0.5) * 150,
-                -2,
-                (Math.random() - 0.5) * 150
+                (Math.random() - 0.5) * 100,
+                -1,
+                (Math.random() - 0.5) * 100
             );
-            hill.receiveShadow = true;
             this.scene.add(hill);
         }
     }
 
     createBuildings() {
         // GUNIC Headquarters
-        const hqGeometry = new THREE.BoxGeometry(20, 15, 20);
+        const hqGeometry = new THREE.BoxGeometry(15, 10, 15);
         const hqMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0x4169E1,
-            transparent: true,
-            opacity: 0.9
+            color: 0x4169E1
         });
         const hq = new THREE.Mesh(hqGeometry, hqMaterial);
-        hq.position.set(0, 7.5, -30);
+        hq.position.set(0, 5, -25);
         hq.castShadow = true;
-        hq.receiveShadow = true;
         this.scene.add(hq);
         
         // HQ Physics
-        const hqShape = new CANNON.Box(new CANNON.Vec3(10, 7.5, 10));
+        const hqShape = new CANNON.Box(new CANNON.Vec3(7.5, 5, 7.5));
         const hqBody = new CANNON.Body({ mass: 0 });
         hqBody.addShape(hqShape);
-        hqBody.position.set(0, 7.5, -30);
+        hqBody.position.set(0, 5, -25);
         this.world.add(hqBody);
         
-        // GUNIC Logo on building
-        const logoGeometry = new THREE.PlaneGeometry(8, 2);
-        const logoMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0x00ffff,
-            transparent: true,
-            opacity: 0.8
-        });
-        const logo = new THREE.Mesh(logoGeometry, logoMaterial);
-        logo.position.set(0, 12, -19.9);
-        this.scene.add(logo);
-        
-        // Other buildings
-        for (let i = 0; i < 8; i++) {
-            const buildingGeometry = new THREE.BoxGeometry(
-                Math.random() * 8 + 4,
-                Math.random() * 20 + 5,
-                Math.random() * 8 + 4
-            );
+        // Simple buildings
+        for (let i = 0; i < 4; i++) {
+            const buildingGeometry = new THREE.BoxGeometry(6, 8, 6);
             const buildingMaterial = new THREE.MeshPhongMaterial({
                 color: new THREE.Color().setHSL(Math.random(), 0.5, 0.6)
             });
             const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
             building.position.set(
-                (Math.random() - 0.5) * 100,
-                buildingGeometry.parameters.height / 2,
-                (Math.random() - 0.5) * 100
+                (i - 2) * 20,
+                4,
+                (Math.random() - 0.5) * 40
             );
-            building.castShadow = true;
-            building.receiveShadow = true;
             this.scene.add(building);
             
             // Building physics
-            const buildingShape = new CANNON.Box(new CANNON.Vec3(
-                buildingGeometry.parameters.width / 2,
-                buildingGeometry.parameters.height / 2,
-                buildingGeometry.parameters.depth / 2
-            ));
+            const buildingShape = new CANNON.Box(new CANNON.Vec3(3, 4, 3));
             const buildingBody = new CANNON.Body({ mass: 0 });
             buildingBody.addShape(buildingShape);
             buildingBody.position.copy(building.position);
@@ -248,34 +225,23 @@ class MetaverseEngine {
     }
 
     createTrees() {
-        for (let i = 0; i < 20; i++) {
-            // Trunk
-            const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.8, 4);
-            const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
-            const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-            
-            // Leaves
-            const leavesGeometry = new THREE.SphereGeometry(3, 8, 8);
-            const leavesMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
-            const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
-            leaves.position.y = 5;
-            
-            const tree = new THREE.Group();
-            tree.add(trunk);
-            tree.add(leaves);
+        for (let i = 0; i < 8; i++) {
+            // Simple tree
+            const treeGeometry = new THREE.CylinderGeometry(0.5, 0.8, 4);
+            const treeMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+            const tree = new THREE.Mesh(treeGeometry, treeMaterial);
             tree.position.set(
-                (Math.random() - 0.5) * 120,
+                (Math.random() - 0.5) * 80,
                 2,
-                (Math.random() - 0.5) * 120
+                (Math.random() - 0.5) * 80
             );
-            tree.castShadow = true;
             this.scene.add(tree);
             
-            // Tree physics (simplified)
+            // Tree physics
             const treeShape = new CANNON.Cylinder(0.5, 0.8, 4, 8);
             const treeBody = new CANNON.Body({ mass: 0 });
             treeBody.addShape(treeShape);
-            treeBody.position.set(tree.position.x, 2, tree.position.z);
+            treeBody.position.copy(tree.position);
             this.world.add(treeBody);
         }
     }
@@ -346,8 +312,8 @@ class MetaverseEngine {
 
     spawnOtherPlayers() {
         // Simulate other players
-        const playerNames = ['Ana', 'João', 'Maria', 'Pedro', 'Sofia'];
-        const avatars = ['👩', '👨', '👧', '👦', '🧑'];
+        const playerNames = ['Ana', 'João', 'Maria'];
+        const avatars = ['👩', '👨', '🧑'];
         
         for (let i = 0; i < 3; i++) {
             const playerId = 'bot_' + i;
@@ -355,11 +321,11 @@ class MetaverseEngine {
                 name: playerNames[i],
                 avatar: avatars[i],
                 position: {
-                    x: (Math.random() - 0.5) * 50,
+                    x: (Math.random() - 0.5) * 30,
                     y: 2,
-                    z: (Math.random() - 0.5) * 50
+                    z: (Math.random() - 0.5) * 30
                 },
-                color: `hsl(${Math.random() * 360}, 70%, 50%)`
+                color: `hsl(${i * 120}, 70%, 50%)`
             };
             
             this.createOtherPlayer(playerId, playerData);
@@ -370,43 +336,20 @@ class MetaverseEngine {
     }
 
     createOtherPlayer(playerId, playerData) {
-        // Player body
-        const playerGeometry = new THREE.CapsuleGeometry(1, 2);
+        // Simple player representation
+        const playerGeometry = new THREE.BoxGeometry(1, 2, 1);
         const playerMaterial = new THREE.MeshPhongMaterial({ 
-            color: playerData.color,
-            transparent: true,
-            opacity: 0.8
+            color: playerData.color
         });
         const playerMesh = new THREE.Mesh(playerGeometry, playerMaterial);
         playerMesh.position.copy(playerData.position);
-        playerMesh.castShadow = true;
         playerMesh.userData = { playerId: playerId };
         this.scene.add(playerMesh);
         
-        // Player name tag
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = 256;
-        canvas.height = 64;
-        context.fillStyle = 'rgba(0, 0, 0, 0.8)';
-        context.fillRect(0, 0, 256, 64);
-        context.fillStyle = 'white';
-        context.font = '24px Arial';
-        context.textAlign = 'center';
-        context.fillText(playerData.name, 128, 40);
-        
-        const nameTexture = new THREE.CanvasTexture(canvas);
-        const nameMaterial = new THREE.SpriteMaterial({ map: nameTexture });
-        const nameSprite = new THREE.Sprite(nameMaterial);
-        nameSprite.position.set(playerData.position.x, playerData.position.y + 3, playerData.position.z);
-        nameSprite.scale.set(4, 1, 1);
-        this.scene.add(nameSprite);
-        
-        // Store references
+        // Store reference
         playerData.mesh = playerMesh;
-        playerData.nameTag = nameSprite;
         
-        // Animate other players
+        // Simple animation
         this.animateOtherPlayer(playerId);
     }
 
@@ -415,23 +358,18 @@ class MetaverseEngine {
         if (!playerData) return;
         
         setInterval(() => {
-            // Random movement
-            const newX = playerData.position.x + (Math.random() - 0.5) * 5;
-            const newZ = playerData.position.z + (Math.random() - 0.5) * 5;
+            // Simple random movement
+            const newX = playerData.position.x + (Math.random() - 0.5) * 3;
+            const newZ = playerData.position.z + (Math.random() - 0.5) * 3;
             
             // Keep within bounds
-            playerData.position.x = Math.max(-80, Math.min(80, newX));
-            playerData.position.z = Math.max(-80, Math.min(80, newZ));
+            playerData.position.x = Math.max(-40, Math.min(40, newX));
+            playerData.position.z = Math.max(-40, Math.min(40, newZ));
             
             if (playerData.mesh) {
                 playerData.mesh.position.copy(playerData.position);
-                playerData.nameTag.position.set(
-                    playerData.position.x,
-                    playerData.position.y + 3,
-                    playerData.position.z
-                );
             }
-        }, 2000 + Math.random() * 3000);
+        }, 3000 + Math.random() * 2000);
     }
 
     createPlayer() {
@@ -439,21 +377,16 @@ class MetaverseEngine {
         const playerShape = new CANNON.Sphere(1);
         this.playerBody = new CANNON.Body({ mass: 1 });
         this.playerBody.addShape(playerShape);
-        this.playerBody.position.set(0, 5, 0);
+        this.playerBody.position.set(0, 3, 5);
         this.playerBody.material = new CANNON.Material();
         this.playerBody.material.friction = 0.4;
         this.world.add(this.playerBody);
         
-        // Player visual (invisible in first person)
-        const playerGeometry = new THREE.CapsuleGeometry(1, 2);
-        const playerMaterial = new THREE.MeshPhongMaterial({ 
-            color: this.playerConfig.primaryColor,
-            transparent: true,
-            opacity: 0.5
-        });
-        this.player = new THREE.Mesh(playerGeometry, playerMaterial);
-        this.player.visible = false; // Hidden in first person
-        this.scene.add(this.player);
+        // Update camera position
+        this.camera.position.copy(this.playerBody.position);
+        this.camera.position.y += 1.5;
+        
+        console.log('🎮 Jogador criado na posição:', this.playerBody.position);
     }
 
     setupEventListeners() {
@@ -694,8 +627,19 @@ class MetaverseEngine {
 // Instância global
 let metaverseEngine = null;
 
+// Inicializar engine quando página carrega
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎮 Inicializando Metaverse Engine...');
+    metaverseEngine = new MetaverseEngine();
+});
+
 // Funções globais
 function enterWorld() {
+    if (!metaverseEngine) {
+        console.error('Engine não inicializado');
+        return;
+    }
+    
     // Get player configuration
     const playerName = document.getElementById('playerName').value || 'Jogador';
     const avatarEmoji = document.getElementById('avatarEmoji').value;
@@ -705,10 +649,6 @@ function enterWorld() {
     const movementStyle = document.getElementById('movementStyle').value;
     
     // Update engine config
-    if (!metaverseEngine) {
-        metaverseEngine = new MetaverseEngine();
-    }
-    
     metaverseEngine.playerConfig = {
         name: playerName,
         avatar: avatarEmoji,
@@ -784,24 +724,33 @@ function handleChatInput(event) {
 }
 
 // Update avatar preview
-document.addEventListener('DOMContentLoaded', () => {
+function setupAvatarPreview() {
     const avatarSelect = document.getElementById('avatarEmoji');
     const avatarPreview = document.getElementById('avatarPreview');
-    
-    avatarSelect.addEventListener('change', () => {
-        avatarPreview.textContent = avatarSelect.value;
-    });
-    
-    // Color preview updates
     const primaryColor = document.getElementById('primaryColor');
     const secondaryColor = document.getElementById('secondaryColor');
     
-    function updatePreviewColors() {
-        avatarPreview.style.background = `linear-gradient(45deg, ${primaryColor.value}, ${secondaryColor.value})`;
+    if (avatarSelect && avatarPreview) {
+        avatarSelect.addEventListener('change', () => {
+            avatarPreview.textContent = avatarSelect.value;
+        });
     }
     
-    primaryColor.addEventListener('change', updatePreviewColors);
-    secondaryColor.addEventListener('change', updatePreviewColors);
+    function updatePreviewColors() {
+        if (avatarPreview && primaryColor && secondaryColor) {
+            avatarPreview.style.background = `linear-gradient(45deg, ${primaryColor.value}, ${secondaryColor.value})`;
+        }
+    }
     
+    if (primaryColor && secondaryColor) {
+        primaryColor.addEventListener('change', updatePreviewColors);
+        secondaryColor.addEventListener('change', updatePreviewColors);
+        updatePreviewColors(); // Initial update
+    }
+}
+
+// Setup when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
     console.log('🎮 Metaverse Interface carregada');
+    setupAvatarPreview();
 });
