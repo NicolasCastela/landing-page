@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUNIC Meet - Videochamada</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .meet-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-dark);
+            overflow: hidden;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 20px;
+            height: calc(100vh - 120px);
+        }
+        
+        .video-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-stream {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-placeholder {
+            color: var(--text-gray);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .user-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .controls-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn.mic {
+            background: #4CAF50;
+        }
+        
+        .control-btn.mic.muted {
+            background: #f44336;
+        }
+        
+        .control-btn.camera {
+            background: #2196F3;
+        }
+        
+        .control-btn.camera.off {
+            background: #f44336;
+        }
+        
+        .control-btn.hangup {
+            background: #f44336;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chat-panel {
+            position: fixed;
+            right: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            border-left: 2px solid var(--primary-color);
+            transition: right 0.3s ease;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-panel.open {
+            right: 0;
+        }
+        
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            color: white;
+        }
+        
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .message-user {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid var(--primary-color);
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .send-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .toggle-chat {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 60;
+        }
+        
+        .users-count {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--primary-color);
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--primary-color);
+            z-index: 60;
+        }
+        
+        .join-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        
+        .join-card {
+            background: var(--bg-dark);
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+        }
+        
+        .join-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .name-input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--primary-color);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .join-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .join-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="meet-container">
+        <!-- Overlay de entrada -->
+        <div class="join-overlay" id="joinOverlay">
+            <div class="join-card">
+                <h2 class="join-title">📹 GUNIC Meet</h2>
+                <p>Entre na videochamada</p>
+                <input type="text" class="name-input" id="userName" placeholder="Seu nome" maxlength="20">
+                <br>
+                <button class="join-btn" onclick="joinMeeting()">🚀 Entrar na Chamada</button>
+            </div>
+        </div>
+        
+        <!-- Contador de usuários -->
+        <div class="users-count" id="usersCount">
+            👥 Usuários: 0
+        </div>
+        
+        <!-- Botão do chat -->
+        <button class="toggle-chat" onclick="toggleChat()">💬 Chat</button>
+        
+        <!-- Grid de vídeos -->
+        <div class="video-grid" id="videoGrid">
+            <div class="video-container">
+                <video id="localVideo" class="video-stream" autoplay muted></video>
+                <div class="user-info" id="localUserInfo">Você</div>
+            </div>
+            <div class="video-container" id="remoteContainer">
+                <div class="video-placeholder">
+                    <div>🎥</div>
+                    <div>Aguardando outros usuários...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Controles -->
+        <div class="controls-bar">
+            <button class="control-btn mic" id="micBtn" onclick="toggleMic()">
+                🎤
+            </button>
+            <button class="control-btn camera" id="cameraBtn" onclick="toggleCamera()">
+                📹
+            </button>
+            <button class="control-btn hangup" onclick="leaveMeeting()">
+                📞
+            </button>
+        </div>
+        
+        <!-- Painel de chat -->
+        <div class="chat-panel" id="chatPanel">
+            <div class="chat-header">
+                <h3>💬 Chat da Reunião</h3>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message">
+                    <div class="message-user">Sistema</div>
+                    <div>Bem-vindo ao GUNIC Meet!</div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatKeyPress(event)">
+                <button class="send-btn" onclick="sendMessage()">📤 Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="video-chat.js"></script>
+</body>
+</html>

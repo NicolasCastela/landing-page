@@ -477,6 +477,53 @@ body {
     left: 100%;
 }
 
+.meet-link {
+    background: linear-gradient(45deg, #FF5722, #E91E63) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 700 !important;
+    animation: meetGlow 2s ease-in-out infinite alternate;
+}
+
+.meet-link:hover {
+    text-shadow: 0 0 10px #FF5722 !important;
+    transform: scale(1.05);
+}
+
+@keyframes meetGlow {
+    from { text-shadow: 0 0 20px #FF5722; }
+    to { text-shadow: 0 0 40px #FF5722, 0 0 60px #E91E63; }
+}
+
+.btn-meet {
+    background: linear-gradient(45deg, #FF5722, #E91E63);
+    color: white;
+    border: none;
+    box-shadow: 0 0 20px rgba(255, 87, 34, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-meet:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 87, 34, 0.5);
+}
+
+.btn-meet::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-meet:hover::before {
+    left: 100%;
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;

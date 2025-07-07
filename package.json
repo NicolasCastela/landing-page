@@ -1,0 +1,24 @@
+{
+  "name": "gunic-meet-server",
+  "version": "1.0.0",
+  "description": "Servidor WebSocket para GUNIC Meet - Sistema de videochamadas",
+  "main": "websocket-server.js",
+  "scripts": {
+    "start": "node websocket-server.js",
+    "dev": "nodemon websocket-server.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "websocket",
+    "webrtc",
+    "video-chat",
+    "gunic"
+  ],
+  "author": "GUNIC Company",
+  "license": "MIT"
+}
