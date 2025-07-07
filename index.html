@@ -26,19 +26,15 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#services">Serviços</a></li>
                 <li><a href="#projects">Projetos</a></li>
-                <li><a href="#innovations">Inovações</a></li>
                 <li><a href="#about">Sobre</a></li>
-                <li><a href="portfolio.html">Portfólio</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="ai-playground.html" class="ai-link">🤖 AI Lab</a></li>
-                <li><a href="ar-experience.html" class="ar-link">🥽 AR Experience</a></li>
-                <li><a href="neural-hologram.html" class="neural-link">🧠 Neural AI</a></li>
-                <li><a href="quantum-teleport.html" class="quantum-link">🌌 Quantum Teleport</a></li>
-                <li><a href="metaverse-world.html" class="metaverse-link">🎮 Metaverse 3D</a></li>
-                <li><a href="file-manager.html" class="drive-link">📁 GUNIC Drive</a></li>
-                <li><a href="video-chat.html" class="meet-link">📹 GUNIC Meet</a></li>
                 <li><a href="#contact">Contato</a></li>
             </ul>
+            
+            <!-- Botão para abrir menu de tecnologias -->
+            <button class="tech-menu-btn" onclick="toggleTechMenu()">
+                <i class="fas fa-rocket"></i>
+                <span>Tech</span>
+            </button>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -80,10 +76,7 @@
                     Teletransporte</button>
                 <button class="btn btn-metaverse" onclick="window.location.href='metaverse-world.html'">🎮
                     Metaverso</button>
-                <button class="btn btn-drive" onclick="window.location.href='file-manager.html'">📁
-                    Drive</button>
-                <button class="btn btn-meet" onclick="window.location.href='video-chat.html'">📹
-                    Meet</button>
+                <button class="btn btn-tech" onclick="toggleTechMenu()">🚀 Tecnologias</button>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -345,6 +338,108 @@
         </div>
     </section>
 
+    <!-- Menu Lateral de Tecnologias -->
+    <div class="tech-sidebar" id="techSidebar">
+        <div class="tech-sidebar-header">
+            <h3>🚀 GUNIC Tech</h3>
+            <button class="close-tech-menu" onclick="toggleTechMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="tech-categories">
+            <div class="tech-category">
+                <h4>🤖 Inteligência Artificial</h4>
+                <div class="tech-links">
+                    <a href="ai-playground.html" class="tech-link">
+                        <i class="fas fa-flask"></i>
+                        <div>
+                            <div class="tech-name">AI Playground</div>
+                            <div class="tech-desc">Ferramentas interativas de IA</div>
+                        </div>
+                    </a>
+                    <a href="neural-hologram.html" class="tech-link">
+                        <i class="fas fa-brain"></i>
+                        <div>
+                            <div class="tech-name">Neural Hologram</div>
+                            <div class="tech-desc">IA holográfica com emoções</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h4>🌌 Realidade Virtual</h4>
+                <div class="tech-links">
+                    <a href="ar-experience.html" class="tech-link">
+                        <i class="fas fa-vr-cardboard"></i>
+                        <div>
+                            <div class="tech-name">AR Experience</div>
+                            <div class="tech-desc">Realidade aumentada 3D</div>
+                        </div>
+                    </a>
+                    <a href="quantum-teleport.html" class="tech-link">
+                        <i class="fas fa-atom"></i>
+                        <div>
+                            <div class="tech-name">Quantum Teleport</div>
+                            <div class="tech-desc">Teletransporte quântico</div>
+                        </div>
+                    </a>
+                    <a href="metaverse-world.html" class="tech-link">
+                        <i class="fas fa-globe"></i>
+                        <div>
+                            <div class="tech-name">Metaverse 3D</div>
+                            <div class="tech-desc">Mundo virtual interativo</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h4>📱 Plataformas</h4>
+                <div class="tech-links">
+                    <a href="file-manager.html" class="tech-link">
+                        <i class="fas fa-folder"></i>
+                        <div>
+                            <div class="tech-name">GUNIC Drive</div>
+                            <div class="tech-desc">Armazenamento na nuvem</div>
+                        </div>
+                    </a>
+                    <a href="video-chat.html" class="tech-link">
+                        <i class="fas fa-video"></i>
+                        <div>
+                            <div class="tech-name">GUNIC Meet</div>
+                            <div class="tech-desc">Videochamadas WebRTC</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h4>📄 Conteúdo</h4>
+                <div class="tech-links">
+                    <a href="portfolio.html" class="tech-link">
+                        <i class="fas fa-briefcase"></i>
+                        <div>
+                            <div class="tech-name">Portfólio</div>
+                            <div class="tech-desc">Nossos projetos</div>
+                        </div>
+                    </a>
+                    <a href="blog.html" class="tech-link">
+                        <i class="fas fa-blog"></i>
+                        <div>
+                            <div class="tech-name">Blog Tech</div>
+                            <div class="tech-desc">Artigos e insights</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay para fechar menu -->
+    <div class="tech-overlay" id="techOverlay" onclick="toggleTechMenu()"></div>
+
     <!-- AI Chatbot -->
     <div class="ai-chatbot" id="aiChatbot">
         <div class="chatbot-header">
@@ -539,6 +634,30 @@
     <script src="env-config.js"></script>
     <script src="ai-config.js"></script>
     <script src="script.js"></script>
+    
+    <script>
+        // Função para toggle do menu de tecnologias
+        function toggleTechMenu() {
+            const sidebar = document.getElementById('techSidebar');
+            const overlay = document.getElementById('techOverlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+        
+        // Fechar menu com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('techSidebar');
+                const overlay = document.getElementById('techOverlay');
+                
+                if (sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
