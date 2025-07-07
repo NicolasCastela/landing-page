@@ -1,0 +1,32 @@
+{
+  "name": "gunic-app-scanner",
+  "version": "1.0.0",
+  "description": "Sistema avançado de detecção de aplicações específicas (Discord, Radmin, etc.)",
+  "main": "app-scanner-backend.js",
+  "scripts": {
+    "start": "node app-scanner-backend.js",
+    "dev": "nodemon app-scanner-backend.js",
+    "test": "node test-app-detector.js"
+  },
+  "keywords": [
+    "app-detection",
+    "process-scanner",
+    "security",
+    "system-monitoring",
+    "discord",
+    "radmin",
+    "teamviewer"
+  ],
+  "author": "GUNIC Company",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

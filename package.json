@@ -1,23 +1,44 @@
 {
-  "name": "gunic-meet-server",
+  "name": "gunic-security-scanner",
   "version": "1.0.0",
-  "description": "Servidor WebSocket para GUNIC Meet - Sistema de videochamadas",
-  "main": "websocket-server.js",
+  "description": "GUNIC Advanced Security Scanner - Backend JavaScript",
+  "main": "backend-scanner.js",
   "scripts": {
-    "start": "node websocket-server.js",
-    "dev": "nodemon websocket-server.js"
+    "start": "node backend-scanner.js",
+    "dev": "nodemon backend-scanner.js",
+    "scanner": "node backend-scanner.js",
+    "websocket": "node websocket-server.js",
+    "test": "node test-scanner.js"
   },
   "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.0",
     "ws": "^8.14.2"
+  },
+  "scripts": {
+    "start": "node backend-scanner.js",
+    "dev": "nodemon backend-scanner.js",
+    "scanner": "node backend-scanner.js",
+    "websocket": "node websocket-server.js",
+    "test": "node test-scanner.js",
+    "remote": "node ip-remote-control.js",
+    "remote-dev": "nodemon ip-remote-control.js",
+    "blog": "node blog-cms.js",
+    "blog-dev": "nodemon blog-cms.js"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
   },
   "keywords": [
+    "security",
+    "scanner",
+    "pentest",
+    "vulnerability",
+    "gunic",
     "websocket",
     "webrtc",
-    "video-chat",
-    "gunic"
+    "video-chat"
   ],
   "author": "GUNIC Company",
   "license": "MIT"

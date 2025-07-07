@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 GUNIC IP Remote Desktop</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container { display: flex; height: 100vh; }
+        .sidebar {
+            width: 320px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-right: 1px solid #333;
+        }
+
+        .main-area { flex: 1; display: flex; flex-direction: column; }
+        .toolbar {
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .screen-area {
+            flex: 1;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #7c3aed, #00ffff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #333;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .status.online { background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; }
+        .status.offline { background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; }
+
+        #remoteScreen {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .ip-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .my-ip {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .connected-ips {
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .ip-item {
+            padding: 5px 10px;
+            margin: 2px 0;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .ip-item:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2 style="color: #00ffff; margin-bottom: 20px;">🌐 IP Remote Desktop</h2>
+            
+            <div class="ip-info">
+                <h3>Meu IP:</h3>
+                <div class="my-ip" id="myIP">Detectando...</div>
+                <button class="btn" onclick="copyMyIP()">📋 Copiar IP</button>
+            </div>
+
+            <div class="input-group">
+                <label>Conectar ao IP:</label>
+                <input type="text" id="targetIP" placeholder="192.168.1.100">
+            </div>
+
+            <button class="btn" onclick="connectToIP()" id="connectBtn">🔗 Conectar</button>
+
+            <div class="status offline" id="status">Desconectado</div>
+
+            <div class="input-group">
+                <label>IPs Conectados:</label>
+                <div class="connected-ips" id="connectedIPs">
+                    <div style="text-align: center; color: #666;">Nenhum IP conectado</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn" onclick="startSharing()">📺 Compartilhar</button>
+                <button class="btn" onclick="stopSharing()">⏹️ Parar</button>
+                <button class="btn" onclick="refreshIPs()">🔄 Atualizar</button>
+                <button class="btn" onclick="disconnect()">❌ Desconectar</button>
+            </div>
+        </div>
+
+        <div class="main-area">
+            <div class="toolbar">
+                <span id="connectionStatus">Aguardando conexão...</span>
+                <div style="margin-left: auto;">
+                    <span id="targetIPDisplay"></span>
+                </div>
+            </div>
+            
+            <div class="screen-area">
+                <canvas id="remoteScreen"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class IPRemoteDesktop {
+            constructor() {
+                this.ws = null;
+                this.myIP = null;
+                this.targetIP = null;
+                this.canvas = document.getElementById('remoteScreen');
+                this.ctx = this.canvas.getContext('2d');
+                this.isConnected = false;
+                this.isSharing = false;
+                
+                this.setupCanvas();
+                this.connect();
+                this.refreshIPs();
+            }
+
+            setupCanvas() {
+                this.canvas.width = this.canvas.offsetWidth;
+                this.canvas.height = this.canvas.offsetHeight;
+                
+                this.canvas.addEventListener('click', (e) => this.sendMouseEvent('click', e));
+                this.canvas.addEventListener('mousemove', (e) => this.sendMouseEvent('move', e));
+                this.canvas.addEventListener('keydown', (e) => this.sendKeyEvent('down', e));
+                this.canvas.addEventListener('keyup', (e) => this.sendKeyEvent('up', e));
+                
+                this.canvas.tabIndex = 0;
+                this.canvas.focus();
+            }
+
+            async connect() {
+                try {
+                    this.ws = new WebSocket('ws://localhost:5003');
+                    
+                    this.ws.onopen = () => {
+                        console.log('WebSocket conectado');
+                        this.updateStatus('online', 'Conectado ao servidor');
+                    };
+
+                    this.ws.onmessage = (event) => {
+                        const message = JSON.parse(event.data);
+                        this.handleMessage(message);
+                    };
+
+                    this.ws.onclose = () => {
+                        console.log('WebSocket desconectado');
+                        this.updateStatus('offline', 'Desconectado');
+                    };
+
+                } catch (error) {
+                    console.error('Erro na conexão:', error);
+                    this.updateStatus('offline', 'Erro de conexão');
+                }
+            }
+
+            handleMessage(message) {
+                switch (message.type) {
+                    case 'connected':
+                        this.myIP = message.your_ip;
+                        document.getElementById('myIP').textContent = this.myIP;
+                        break;
+
+                    case 'screen-data':
+                        this.displayScreen(message.data);
+                        document.getElementById('targetIPDisplay').textContent = `Visualizando: ${message.source_ip}`;
+                        break;
+                }
+            }
+
+            async connectToIP() {
+                const targetIP = document.getElementById('targetIP').value.trim();
+                if (!targetIP) return;
+
+                this.targetIP = targetIP;
+                this.updateStatus('connecting', 'Conectando...');
+
+                try {
+                    const response = await fetch('/api/connect-ip', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ targetIP })
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.isConnected = true;
+                        this.updateStatus('online', `Conectado a ${targetIP}`);
+                        this.requestScreen();
+                    } else {
+                        this.updateStatus('offline', 'IP não encontrado');
+                    }
+                } catch (error) {
+                    this.updateStatus('offline', 'Erro na conexão');
+                }
+            }
+
+            requestScreen() {
+                if (this.ws && this.targetIP) {
+                    this.ws.send(JSON.stringify({
+                        type: 'request-screen',
+                        target_ip: this.targetIP
+                    }));
+                }
+            }
+
+            startSharing() {
+                if (this.ws) {
+                    this.ws.send(JSON.stringify({
+                        type: 'start-sharing'
+                    }));
+                    this.isSharing = true;
+                    this.updateStatus('online', 'Compartilhando tela');
+                }
+            }
+
+            stopSharing() {
+                if (this.ws) {
+                    this.ws.send(JSON.stringify({
+                        type: 'stop-sharing'
+                    }));
+                    this.isSharing = false;
+                    this.updateStatus('online', 'Parou de compartilhar');
+                }
+            }
+
+            async refreshIPs() {
+                try {
+                    const response = await fetch('/api/connected-ips');
+                    const data = await response.json();
+                    this.displayConnectedIPs(data.ips);
+                } catch (error) {
+                    console.error('Erro ao buscar IPs:', error);
+                }
+            }
+
+            displayConnectedIPs(ips) {
+                const container = document.getElementById('connectedIPs');
+                
+                if (ips.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #666;">Nenhum IP conectado</div>';
+                    return;
+                }
+
+                container.innerHTML = ips.map(ip => 
+                    `<div class="ip-item" onclick="selectIP('${ip}')">${ip}</div>`
+                ).join('');
+            }
+
+            sendMouseEvent(type, event) {
+                if (!this.isConnected || !this.targetIP) return;
+
+                const rect = this.canvas.getBoundingClientRect();
+                const x = (event.clientX - rect.left) / rect.width;
+                const y = (event.clientY - rect.top) / rect.height;
+
+                this.ws.send(JSON.stringify({
+                    type: 'control-event',
+                    target_ip: this.targetIP,
+                    event: { type: 'mouse', action: type, x, y }
+                }));
+            }
+
+            sendKeyEvent(type, event) {
+                if (!this.isConnected || !this.targetIP) return;
+
+                this.ws.send(JSON.stringify({
+                    type: 'control-event',
+                    target_ip: this.targetIP,
+                    event: { type: 'keyboard', action: type, key: event.key, code: event.code }
+                }));
+            }
+
+            displayScreen(imageData) {
+                const img = new Image();
+                img.onload = () => {
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+                };
+                img.src = 'data:image/jpeg;base64,' + imageData;
+            }
+
+            updateStatus(type, message) {
+                const status = document.getElementById('status');
+                status.className = `status ${type}`;
+                status.textContent = message;
+                
+                document.getElementById('connectionStatus').textContent = message;
+            }
+
+            disconnect() {
+                this.isConnected = false;
+                this.targetIP = null;
+                this.updateStatus('offline', 'Desconectado');
+                document.getElementById('targetIPDisplay').textContent = '';
+            }
+        }
+
+        function copyMyIP() {
+            const myIP = document.getElementById('myIP').textContent;
+            navigator.clipboard.writeText(myIP);
+            alert('IP copiado!');
+        }
+
+        function connectToIP() {
+            desktop.connectToIP();
+        }
+
+        function selectIP(ip) {
+            document.getElementById('targetIP').value = ip;
+        }
+
+        function startSharing() {
+            desktop.startSharing();
+        }
+
+        function stopSharing() {
+            desktop.stopSharing();
+        }
+
+        function refreshIPs() {
+            desktop.refreshIPs();
+        }
+
+        function disconnect() {
+            desktop.disconnect();
+        }
+
+        const desktop = new IPRemoteDesktop();
+        
+        // Auto-refresh IPs a cada 5 segundos
+        setInterval(() => desktop.refreshIPs(), 5000);
+    </script>
+</body>
+</html>
