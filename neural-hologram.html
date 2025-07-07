@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Hologram - GUNIC AI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.0.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.min.js"></script>
+    <script src="ai-config.js"></script>
+    <style>
+        .hologram-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #001122 0%, #000000 100%);
+            overflow: hidden;
+        }
+        
+        .hologram-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .neural-interface {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .neural-panel {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            min-width: 250px;
+        }
+        
+        .emotion-display {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .emotion-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .emotion-level {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .emotion-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .gesture-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .gesture-btn {
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .gesture-btn:hover, .gesture-btn.active {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+        }
+        
+        .hologram-assistant {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            text-align: center;
+        }
+        
+        .assistant-speech {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .assistant-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid var(--primary-color);
+        }
+        
+        .voice-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px var(--primary-color);
+        }
+        
+        .voice-btn.listening {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .neural-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .hologram-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+                linear-gradient(45deg, transparent 49%, rgba(0, 255, 255, 0.05) 50%, transparent 51%);
+            animation: hologramFlicker 3s infinite;
+        }
+        
+        @keyframes hologramFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .camera-feed {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .camera-feed video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        
+        .neural-status {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .status-active {
+            color: var(--primary-color);
+        }
+        
+        .back-btn-neural {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 15;
+        }
+        
+        .back-btn-neural:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="hologram-container">
+        <a href="index.html" class="back-btn-neural">← Voltar</a>
+        
+        <!-- Canvas para renderização 3D -->
+        <canvas id="hologramCanvas" class="hologram-canvas"></canvas>
+        
+        <!-- Efeitos holográficos -->
+        <div class="hologram-effects"></div>
+        <div class="neural-particles" id="neuralParticles"></div>
+        
+        <!-- Interface Neural -->
+        <div class="neural-interface">
+            <div class="neural-panel">
+                <h3>🧠 Análise Neural</h3>
+                <div class="emotion-display">
+                    <div class="emotion-bar">
+                        <span>😊 Felicidade</span>
+                        <div class="emotion-level">
+                            <div class="emotion-fill" id="happyLevel"></div>
+                        </div>
+                    </div>
+                    <div class="emotion-bar">
+                        <span>😮 Surpresa</span>
+                        <div class="emotion-level">
+                            <div class="emotion-fill" id="surpriseLevel"></div>
+                        </div>
+                    </div>
+                    <div class="emotion-bar">
+                        <span>🤔 Concentração</span>
+                        <div class="emotion-level">
+                            <div class="emotion-fill" id="focusLevel"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gesture-controls">
+                    <button class="gesture-btn" onclick="activateGesture('wave')">👋 Acenar</button>
+                    <button class="gesture-btn" onclick="activateGesture('point')">👉 Apontar</button>
+                    <button class="gesture-btn" onclick="activateGesture('peace')">✌️ Paz</button>
+                    <button class="gesture-btn" onclick="activateGesture('thumbs')">👍 Like</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feed da câmera -->
+        <div class="camera-feed">
+            <video id="cameraVideo" autoplay muted></video>
+        </div>
+        
+        <!-- Assistente Holográfico -->
+        <div class="hologram-assistant">
+            <div class="assistant-speech" id="assistantSpeech">
+                Olá! Sou ARIA, sua assistente holográfica. Posso ver suas emoções e gestos!
+            </div>
+            <div class="voice-input">
+                <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceInput()">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <span id="voiceStatus">Clique para falar</span>
+            </div>
+        </div>
+        
+        <!-- Status Neural -->
+        <div class="neural-status">
+            <div class="status-item">
+                <span>Reconhecimento Facial:</span>
+                <span class="status-active" id="faceStatus">Ativo</span>
+            </div>
+            <div class="status-item">
+                <span>Detecção de Gestos:</span>
+                <span class="status-active" id="gestureStatus">Ativo</span>
+            </div>
+            <div class="status-item">
+                <span>IA Emocional:</span>
+                <span class="status-active" id="emotionStatus">Ativo</span>
+            </div>
+            <div class="status-item">
+                <span>Holografia:</span>
+                <span class="status-active" id="hologramStatus">Renderizando</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="neural-engine.js"></script>
+</body>
+</html>

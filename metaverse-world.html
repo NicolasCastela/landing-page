@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUNIC Metaverse - Mundo 3D</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon@0.20.0/build/cannon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+    <style>
+        .metaverse-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        .game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .avatar-creator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 100;
+            color: white;
+            min-width: 400px;
+            text-align: center;
+        }
+        
+        .avatar-creator.hidden {
+            display: none;
+        }
+        
+        .avatar-preview {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        
+        .customization-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .custom-option {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .custom-option label {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .custom-option input, .custom-option select {
+            padding: 8px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .enter-world-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .enter-world-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--primary-color);
+        }
+        
+        .game-hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 10;
+            display: none;
+            justify-content: space-between;
+            align-items: flex-start;
+            pointer-events: none;
+        }
+        
+        .game-hud.active {
+            display: flex;
+        }
+        
+        .player-info {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            pointer-events: auto;
+        }
+        
+        .voice-controls {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            pointer-events: auto;
+            text-align: center;
+        }
+        
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--secondary-color);
+        }
+        
+        .voice-btn.active {
+            animation: pulse 1s infinite;
+            box-shadow: 0 0 30px var(--secondary-color);
+        }
+        
+        .controls-help {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            z-index: 10;
+            display: none;
+        }
+        
+        .controls-help.active {
+            display: block;
+        }
+        
+        .control-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+        
+        .players-list {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            z-index: 10;
+            display: none;
+            min-width: 200px;
+        }
+        
+        .players-list.active {
+            display: block;
+        }
+        
+        .player-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .player-avatar-mini {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-radius: 50%;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .crosshair::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .chat-box {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            width: 300px;
+            max-height: 200px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 10px;
+            color: white;
+            z-index: 10;
+            display: none;
+            overflow-y: auto;
+        }
+        
+        .chat-box.active {
+            display: block;
+        }
+        
+        .chat-message {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        .chat-input {
+            position: absolute;
+            bottom: 60px;
+            left: 20px;
+            width: 300px;
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            z-index: 10;
+            display: none;
+        }
+        
+        .chat-input.active {
+            display: block;
+        }
+        
+        .loading-world {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 50;
+            display: none;
+        }
+        
+        .loading-world.active {
+            display: block;
+        }
+        
+        .world-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(0, 255, 255, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="metaverse-container">
+        <a href="index.html" class="back-btn" style="z-index: 200;">← Voltar</a>
+        
+        <!-- Canvas do jogo -->
+        <canvas id="gameCanvas" class="game-canvas"></canvas>
+        
+        <!-- Crosshair -->
+        <div class="crosshair"></div>
+        
+        <!-- Loading -->
+        <div class="loading-world" id="loadingWorld">
+            <div class="world-spinner"></div>
+            <h3>Carregando Metaverso...</h3>
+            <p>Preparando mundo 3D e sistemas</p>
+        </div>
+        
+        <!-- Criador de Avatar -->
+        <div class="avatar-creator" id="avatarCreator">
+            <h2>🎮 Crie seu Avatar</h2>
+            <div class="avatar-preview" id="avatarPreview">🧑</div>
+            
+            <div class="customization-panel">
+                <div class="custom-option">
+                    <label>Nome do Jogador:</label>
+                    <input type="text" id="playerName" placeholder="Seu nome" maxlength="15">
+                </div>
+                
+                <div class="custom-option">
+                    <label>Avatar:</label>
+                    <select id="avatarEmoji">
+                        <option value="🧑">🧑 Pessoa</option>
+                        <option value="👨">👨 Homem</option>
+                        <option value="👩">👩 Mulher</option>
+                        <option value="🧙">🧙 Mago</option>
+                        <option value="🦸">🦸 Herói</option>
+                        <option value="🤖">🤖 Robô</option>
+                        <option value="👽">👽 Alien</option>
+                        <option value="🐱">🐱 Gato</option>
+                    </select>
+                </div>
+                
+                <div class="custom-option">
+                    <label>Cor Principal:</label>
+                    <input type="color" id="primaryColor" value="#00ffff">
+                </div>
+                
+                <div class="custom-option">
+                    <label>Cor Secundária:</label>
+                    <input type="color" id="secondaryColor" value="#ff0080">
+                </div>
+                
+                <div class="custom-option">
+                    <label>Velocidade:</label>
+                    <select id="playerSpeed">
+                        <option value="0.1">🐌 Lento</option>
+                        <option value="0.2" selected>🚶 Normal</option>
+                        <option value="0.3">🏃 Rápido</option>
+                        <option value="0.5">⚡ Super Rápido</option>
+                    </select>
+                </div>
+                
+                <div class="custom-option">
+                    <label>Estilo de Movimento:</label>
+                    <select id="movementStyle">
+                        <option value="walk" selected>🚶 Caminhada</option>
+                        <option value="float">🎈 Flutuante</option>
+                        <option value="bounce">🦘 Saltitante</option>
+                        <option value="glide">🦅 Deslizante</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="enter-world-btn" onclick="enterWorld()">
+                🌍 ENTRAR NO MUNDO
+            </button>
+        </div>
+        
+        <!-- HUD do Jogo -->
+        <div class="game-hud" id="gameHUD">
+            <div class="player-info">
+                <h4 id="playerNameDisplay">Jogador</h4>
+                <div>Posição: <span id="playerPosition">0, 0, 0</span></div>
+                <div>Jogadores Online: <span id="onlineCount">1</span></div>
+            </div>
+            
+            <div class="voice-controls">
+                <h4>🎤 Controles de Voz</h4>
+                <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="voice-btn" onclick="toggleChat()">
+                    <i class="fas fa-comments"></i>
+                </button>
+                <div id="voiceStatus">Clique para falar</div>
+            </div>
+        </div>
+        
+        <!-- Controles -->
+        <div class="controls-help" id="controlsHelp">
+            <h4>🎮 Controles</h4>
+            <div class="control-item">
+                <span>Mover:</span>
+                <span>WASD</span>
+            </div>
+            <div class="control-item">
+                <span>Olhar:</span>
+                <span>Mouse</span>
+            </div>
+            <div class="control-item">
+                <span>Correr:</span>
+                <span>Shift</span>
+            </div>
+            <div class="control-item">
+                <span>Pular:</span>
+                <span>Espaço</span>
+            </div>
+            <div class="control-item">
+                <span>Chat:</span>
+                <span>T</span>
+            </div>
+            <div class="control-item">
+                <span>Voz:</span>
+                <span>V</span>
+            </div>
+        </div>
+        
+        <!-- Lista de Jogadores -->
+        <div class="players-list" id="playersList">
+            <h4>👥 Jogadores Online</h4>
+            <div id="playersContainer">
+                <!-- Jogadores serão adicionados aqui -->
+            </div>
+        </div>
+        
+        <!-- Chat -->
+        <div class="chat-box" id="chatBox">
+            <!-- Mensagens aparecerão aqui -->
+        </div>
+        
+        <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatInput(event)">
+    </div>
+
+    <script src="metaverse-engine.js"></script>
+</body>
+</html>

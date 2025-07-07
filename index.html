@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gunic Company - Inovação Tecnológica</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
     <!-- CDN Libraries -->
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -27,6 +31,9 @@
                 <li><a href="portfolio.html">Portfólio</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="ai-playground.html" class="ai-link">🤖 AI Lab</a></li>
+                <li><a href="ar-experience.html" class="ar-link">🥽 AR Experience</a></li>
+                <li><a href="neural-hologram.html" class="neural-link">🧠 Neural AI</a></li>
+                <li><a href="quantum-teleport.html" class="quantum-link">🌌 Quantum Teleport</a></li>
                 <li><a href="#contact">Contato</a></li>
             </ul>
             <div class="hamburger">
@@ -62,6 +69,12 @@
             <div class="hero-buttons" data-aos="fade-up" data-aos-delay="700">
                 <button class="btn btn-primary" onclick="scrollToSection('contact')">Começar Agora</button>
                 <button class="btn btn-secondary" onclick="scrollToSection('about')">Saiba Mais</button>
+                <button class="btn btn-ar" onclick="window.location.href='ar-experience.html'">🥽 Experiência
+                    AR</button>
+                <button class="btn btn-neural" onclick="window.location.href='neural-hologram.html'">🧠 IA
+                    Neural</button>
+                <button class="btn btn-quantum" onclick="window.location.href='quantum-teleport.html'">🌌
+                    Teletransporte</button>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -73,10 +86,11 @@
     <section class="dynamic-banner">
         <div class="banner-content">
             <div class="banner-text">
-                <span class="banner-item active">🚀 Lançamento: Nova plataforma de IA em desenvolvimento</span>
-                <span class="banner-item">💡 Inovação: Sistema médico revolucionário em testes</span>
-                <span class="banner-item">🏆 Conquista: Prêmio de melhor startup tech 2024</span>
-                <span class="banner-item">🌟 Novidade: Parceria estratégica com grandes empresas</span>
+                <span class="banner-item active">🌌 IMPOSSÍVEL: Teletransporte Digital com IA Quântica lançado!</span>
+                <span class="banner-item">🌌 Quantum Teleport: Viaje entre dimensões virtuais em tempo real</span>
+                <span class="banner-item">🧠 Neural AI: Assistente virtual que vê suas emoções e gestos</span>
+                <span class="banner-item">🥽 AR Experience: Visualize projetos em 3D no mundo real</span>
+                <span class="banner-item">🚀 IA Generativa: Crie modelos 3D com comandos de voz</span>
             </div>
         </div>
     </section>
@@ -291,7 +305,8 @@
             <div class="about-content">
                 <div class="about-text">
                     <h2 class="section-title">Sobre a Gunic</h2>
-                    <p>Somos uma empresa de tecnologia focada em criar soluções inovadoras que transformam negócios e melhoram vidas.</p>
+                    <p>Somos uma empresa de tecnologia focada em criar soluções inovadoras que transformam negócios e
+                        melhoram vidas.</p>
                     <div class="stats">
                         <div class="stat">
                             <span class="stat-number" data-target="100">0</span>
@@ -351,7 +366,8 @@
             </div>
         </div>
         <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatKeyPress(event)">
+            <input type="text" id="chatInput" placeholder="Digite sua mensagem..."
+                onkeypress="handleChatKeyPress(event)">
             <button onclick="sendMessage()" class="send-btn">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -382,7 +398,8 @@
             <div class="modal-body">
                 <div class="code-input">
                     <label>Descreva o que você quer criar:</label>
-                    <textarea id="codePrompt" placeholder="Ex: Criar uma função JavaScript que valida CPF..."></textarea>
+                    <textarea id="codePrompt"
+                        placeholder="Ex: Criar uma função JavaScript que valida CPF..."></textarea>
                     <div class="code-options">
                         <select id="codeLanguage">
                             <option value="javascript">JavaScript</option>
@@ -417,15 +434,15 @@
                 <div class="contact-info">
                     <div class="contact-item">
                         <span class="contact-icon">📧</span>
-                        <span>contato@gunic.com</span>
+                        <span>nickcastela@hotmail.com</span>
                     </div>
                     <div class="contact-item">
                         <span class="contact-icon">📱</span>
-                        <span>+55 (11) 99999-9999</span>
+                        <span>+55 (67) 99133-6868</span>
                     </div>
                     <div class="contact-item">
                         <span class="contact-icon">📍</span>
-                        <span>São Paulo, Brasil</span>
+                        <span>Campo Grande - MS, Brasil</span>
                     </div>
                 </div>
                 <form class="contact-form">
@@ -471,6 +488,15 @@
                         <a href="ai-playground.html" class="ai-tool-btn">
                             <i class="fas fa-flask"></i> AI Playground
                         </a>
+                        <a href="ar-experience.html" class="ai-tool-btn">
+                            <i class="fas fa-vr-cardboard"></i> AR Experience
+                        </a>
+                        <a href="neural-hologram.html" class="ai-tool-btn">
+                            <i class="fas fa-brain"></i> Neural Hologram
+                        </a>
+                        <a href="quantum-teleport.html" class="ai-tool-btn">
+                            <i class="fas fa-atom"></i> Quantum Teleport
+                        </a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -496,4 +522,5 @@
     <script src="ai-config.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

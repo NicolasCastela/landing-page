@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Teleport - GUNIC Multiverse</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon@0.20.0/build/cannon.min.js"></script>
+    <script src="ai-config.js"></script>
+    <style>
+        .quantum-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #000033 0%, #000000 100%);
+            overflow: hidden;
+        }
+        
+        .quantum-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .quantum-hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .dimension-panel {
+            background: rgba(0, 100, 255, 0.1);
+            border: 1px solid #0066ff;
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            min-width: 280px;
+        }
+        
+        .dimension-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .dimension-btn {
+            background: rgba(0, 100, 255, 0.2);
+            border: 1px solid #0066ff;
+            color: #00ccff;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dimension-btn:hover, .dimension-btn.active {
+            background: #0066ff;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #0066ff;
+        }
+        
+        .dimension-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .dimension-btn:hover::before {
+            left: 100%;
+        }
+        
+        .teleport-controls {
+            background: rgba(255, 0, 128, 0.1);
+            border: 1px solid #ff0080;
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            min-width: 250px;
+        }
+        
+        .teleport-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #ff0080, #8000ff);
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .teleport-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #ff0080;
+        }
+        
+        .teleport-btn.charging {
+            animation: quantumCharge 2s infinite;
+        }
+        
+        @keyframes quantumCharge {
+            0%, 100% { box-shadow: 0 0 20px #ff0080; }
+            50% { box-shadow: 0 0 50px #ff0080, 0 0 80px #8000ff; }
+        }
+        
+        .quantum-status {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            z-index: 10;
+            min-width: 200px;
+        }
+        
+        .status-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .status-active {
+            color: #00ff88;
+        }
+        
+        .multiverse-users {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ffaa00;
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-light);
+            z-index: 10;
+            max-width: 250px;
+        }
+        
+        .user-avatar {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0080, #00ccff);
+            margin: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .user-avatar::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .user-avatar:hover::after {
+            opacity: 1;
+        }
+        
+        .quantum-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .teleport-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 3px solid #ff0080;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 5;
+        }
+        
+        .teleport-effect.active {
+            animation: teleportRing 2s ease-out;
+        }
+        
+        @keyframes teleportRing {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(3);
+            }
+        }
+        
+        .dimension-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 8;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .dimension-info.show {
+            opacity: 1;
+        }
+        
+        .dimension-title {
+            font-size: 2.5rem;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px currentColor;
+        }
+        
+        .dimension-desc {
+            font-size: 1.2rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .back-btn-quantum {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 15;
+        }
+        
+        .back-btn-quantum:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="quantum-container">
+        <a href="index.html" class="back-btn-quantum">← Voltar</a>
+        
+        <!-- Canvas para renderização 3D -->
+        <canvas id="quantumCanvas" class="quantum-canvas"></canvas>
+        
+        <!-- Partículas quânticas -->
+        <div class="quantum-particles" id="quantumParticles"></div>
+        
+        <!-- Efeito de teletransporte -->
+        <div class="teleport-effect" id="teleportEffect"></div>
+        
+        <!-- Informações da dimensão -->
+        <div class="dimension-info" id="dimensionInfo">
+            <div class="dimension-title" id="dimensionTitle">Dimensão Base</div>
+            <div class="dimension-desc" id="dimensionDesc">Realidade padrão da GUNIC Company</div>
+        </div>
+        
+        <!-- HUD Quântico -->
+        <div class="quantum-hud">
+            <div class="dimension-panel">
+                <h3>🌌 Seletor de Dimensões</h3>
+                <div class="dimension-selector">
+                    <button class="dimension-btn active" onclick="selectDimension('base')">
+                        🏢 Escritório GUNIC
+                    </button>
+                    <button class="dimension-btn" onclick="selectDimension('cyber')">
+                        🌃 Cidade Cyberpunk
+                    </button>
+                    <button class="dimension-btn" onclick="selectDimension('space')">
+                        🚀 Estação Espacial
+                    </button>
+                    <button class="dimension-btn" onclick="selectDimension('quantum')">
+                        ⚛️ Laboratório Quântico
+                    </button>
+                    <button class="dimension-btn" onclick="selectDimension('nature')">
+                        🌿 Floresta Digital
+                    </button>
+                    <button class="dimension-btn" onclick="selectDimension('ocean')">
+                        🌊 Oceano Virtual
+                    </button>
+                </div>
+            </div>
+            
+            <div class="teleport-controls">
+                <h3>🌀 Controles Quânticos</h3>
+                <button class="teleport-btn" id="teleportBtn" onclick="initiateTeleport()">
+                    🌀 TELETRANSPORTAR
+                </button>
+                <button class="teleport-btn" onclick="generateRandomDimension()">
+                    🎲 Dimensão Aleatória
+                </button>
+                <button class="teleport-btn" onclick="inviteCollaborators()">
+                    👥 Convidar Usuários
+                </button>
+            </div>
+        </div>
+        
+        <!-- Status Quântico -->
+        <div class="quantum-status">
+            <div class="status-line">
+                <span>Estado Quântico:</span>
+                <span class="status-active" id="quantumState">Estável</span>
+            </div>
+            <div class="status-line">
+                <span>Dimensão Atual:</span>
+                <span class="status-active" id="currentDimension">Base</span>
+            </div>
+            <div class="status-line">
+                <span>Energia Quântica:</span>
+                <span class="status-active" id="quantumEnergy">100%</span>
+            </div>
+            <div class="status-line">
+                <span>Usuários Conectados:</span>
+                <span class="status-active" id="connectedUsers">1</span>
+            </div>
+        </div>
+        
+        <!-- Usuários do Multiverso -->
+        <div class="multiverse-users">
+            <h4>👥 Multiverso Colaborativo</h4>
+            <div id="userAvatars">
+                <div class="user-avatar" data-name="Você" style="background: linear-gradient(45deg, #00ff88, #0088ff);"></div>
+                <div class="user-avatar" data-name="Ana (Cyber)" style="background: linear-gradient(45deg, #ff0080, #8000ff);"></div>
+                <div class="user-avatar" data-name="João (Space)" style="background: linear-gradient(45deg, #ffaa00, #ff6600);"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="quantum-engine.js"></script>
+</body>
+</html>

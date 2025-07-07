@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcador AR - GUNIC Company</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .marker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+        }
+        
+        .marker-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px var(--primary-color);
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .marker-image {
+            width: 200px;
+            height: 200px;
+            border: 3px solid #000;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            position: relative;
+        }
+        
+        .marker-pattern {
+            width: 160px;
+            height: 160px;
+            background: #000;
+            position: relative;
+        }
+        
+        .pattern-inner {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            background: white;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+        }
+        
+        .pattern-cell {
+            border: 1px solid #000;
+        }
+        
+        .pattern-cell.filled {
+            background: #000;
+        }
+        
+        .instructions {
+            max-width: 600px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .step {
+            background: rgba(0,255,255,0.1);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .download-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="marker-container">
+        <h1>🎯 Marcador AR - GUNIC</h1>
+        <p>Use este marcador para ativar a experiência AR</p>
+        
+        <div class="marker-box">
+            <div class="marker-image">
+                <div class="marker-pattern">
+                    <div class="pattern-inner">
+                        <div class="pattern-cell filled"></div>
+                        <div class="pattern-cell"></div>
+                        <div class="pattern-cell filled"></div>
+                        <div class="pattern-cell"></div>
+                        <div class="pattern-cell filled"></div>
+                        <div class="pattern-cell"></div>
+                        <div class="pattern-cell filled"></div>
+                        <div class="pattern-cell"></div>
+                        <div class="pattern-cell filled"></div>
+                    </div>
+                </div>
+            </div>
+            <p style="color: #000; margin-top: 20px;">Marcador GUNIC AR</p>
+        </div>
+        
+        <div class="instructions">
+            <h2>📱 Como usar:</h2>
+            
+            <div class="step">
+                <h3>1. 📥 Baixar Marcador</h3>
+                <p>Clique no botão abaixo para baixar o marcador em alta qualidade</p>
+                <button class="download-btn" onclick="downloadMarker()">📥 Baixar PNG</button>
+                <button class="download-btn" onclick="printMarker()">🖨️ Imprimir</button>
+            </div>
+            
+            <div class="step">
+                <h3>2. 🖨️ Imprimir</h3>
+                <p>Imprima o marcador em papel branco, tamanho mínimo 10x10cm para melhor detecção</p>
+            </div>
+            
+            <div class="step">
+                <h3>3. 📱 Abrir AR</h3>
+                <p>Volte para a experiência AR e aponte a câmera para o marcador impresso</p>
+                <button class="download-btn" onclick="goToAR()">🚀 Ir para AR</button>
+            </div>
+            
+            <div class="step">
+                <h3>4. 🎮 Interagir</h3>
+                <p>Use os controles para gerar modelos 3D com IA e explorar os projetos GUNIC</p>
+            </div>
+        </div>
+        
+        <button class="download-btn" onclick="goBack()">← Voltar</button>
+    </div>
+
+    <script>
+        function downloadMarker() {
+            // Criar canvas para gerar imagem do marcador
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400;
+            canvas.height = 400;
+            
+            // Fundo branco
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, 400, 400);
+            
+            // Borda preta
+            ctx.fillStyle = 'black';
+            ctx.fillRect(20, 20, 360, 360);
+            
+            // Fundo interno branco
+            ctx.fillStyle = 'white';
+            ctx.fillRect(60, 60, 280, 280);
+            
+            // Padrão do marcador (3x3 grid)
+            const cellSize = 280 / 3;
+            const pattern = [
+                [1, 0, 1],
+                [0, 1, 0],
+                [1, 0, 1]
+            ];
+            
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 3; col++) {
+                    if (pattern[row][col]) {
+                        ctx.fillStyle = 'black';
+                        ctx.fillRect(
+                            60 + col * cellSize,
+                            60 + row * cellSize,
+                            cellSize,
+                            cellSize
+                        );
+                    }
+                }
+            }
+            
+            // Texto
+            ctx.fillStyle = 'black';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('GUNIC AR MARKER', 200, 390);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = 'gunic-ar-marker.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        function printMarker() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Marcador AR - GUNIC</title>
+                    <style>
+                        body { 
+                            display: flex; 
+                            justify-content: center; 
+                            align-items: center; 
+                            min-height: 100vh; 
+                            margin: 0;
+                            font-family: Arial, sans-serif;
+                        }
+                        .marker { 
+                            width: 300px; 
+                            height: 300px; 
+                            border: 3px solid #000; 
+                            background: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            position: relative;
+                        }
+                        .pattern {
+                            width: 240px;
+                            height: 240px;
+                            background: #000;
+                            position: relative;
+                        }
+                        .inner {
+                            position: absolute;
+                            top: 30px;
+                            left: 30px;
+                            width: 180px;
+                            height: 180px;
+                            background: white;
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            grid-template-rows: repeat(3, 1fr);
+                        }
+                        .cell { border: 1px solid #000; }
+                        .filled { background: #000; }
+                        .label {
+                            position: absolute;
+                            bottom: -40px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            font-weight: bold;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="marker">
+                        <div class="pattern">
+                            <div class="inner">
+                                <div class="cell filled"></div>
+                                <div class="cell"></div>
+                                <div class="cell filled"></div>
+                                <div class="cell"></div>
+                                <div class="cell filled"></div>
+                                <div class="cell"></div>
+                                <div class="cell filled"></div>
+                                <div class="cell"></div>
+                                <div class="cell filled"></div>
+                            </div>
+                        </div>
+                        <div class="label">GUNIC AR MARKER</div>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        function goToAR() {
+            window.location.href = 'ar-experience.html';
+        }
+        
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

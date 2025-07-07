@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural AI Demo - GUNIC</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .demo-container {
+            min-height: 100vh;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            padding: 100px 20px 50px;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .demo-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid #8b5cf6;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .demo-card:hover::before {
+            left: 100%;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        }
+        
+        .demo-icon {
+            font-size: 3rem;
+            color: #8b5cf6;
+            margin-bottom: 20px;
+        }
+        
+        .demo-card h3 {
+            color: #06b6d4;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .demo-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .demo-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            color: var(--text-gray);
+        }
+        
+        .demo-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .demo-btn {
+            background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .demo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .tech-specs {
+            background: var(--bg-darker);
+            padding: 50px 20px;
+            margin-top: 50px;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .spec-item {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid #06b6d4;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .spec-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #06b6d4;
+            display: block;
+        }
+        
+        .spec-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← Voltar</a>
+    
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">🧠 Neural AI Demo</h1>
+            <p>Explore as capacidades revolucionárias da nossa IA Neural</p>
+        </div>
+        
+        <div class="demo-grid">
+            <div class="demo-card">
+                <div class="demo-icon">😊</div>
+                <h3>Reconhecimento Emocional</h3>
+                <p>IA que detecta e responde às suas emoções em tempo real</p>
+                <ul class="demo-features">
+                    <li>Detecção facial avançada</li>
+                    <li>Análise de micro-expressões</li>
+                    <li>Resposta contextual</li>
+                    <li>Adaptação de personalidade</li>
+                </ul>
+                <button class="demo-btn" onclick="window.location.href='neural-hologram.html'">
+                    Testar Agora
+                </button>
+            </div>
+            
+            <div class="demo-card">
+                <div class="demo-icon">👋</div>
+                <h3>Detecção de Gestos</h3>
+                <p>Reconhece e interpreta gestos das mãos com precisão</p>
+                <ul class="demo-features">
+                    <li>Tracking de mãos em 3D</li>
+                    <li>21 pontos de referência</li>
+                    <li>Gestos personalizados</li>
+                    <li>Resposta instantânea</li>
+                </ul>
+                <button class="demo-btn" onclick="window.location.href='neural-hologram.html'">
+                    Experimentar
+                </button>
+            </div>
+            
+            <div class="demo-card">
+                <div class="demo-icon">🎭</div>
+                <h3>Holografia 3D</h3>
+                <p>Assistente virtual holográfico com renderização realista</p>
+                <ul class="demo-features">
+                    <li>Renderização WebGL</li>
+                    <li>Shaders personalizados</li>
+                    <li>Animações fluidas</li>
+                    <li>Efeitos de partículas</li>
+                </ul>
+                <button class="demo-btn" onclick="window.location.href='neural-hologram.html'">
+                    Ver Holograma
+                </button>
+            </div>
+            
+            <div class="demo-card">
+                <div class="demo-icon">🎤</div>
+                <h3>Comandos de Voz</h3>
+                <p>Interação natural através de comandos de voz inteligentes</p>
+                <ul class="demo-features">
+                    <li>Reconhecimento de fala</li>
+                    <li>Processamento de linguagem</li>
+                    <li>Síntese de voz</li>
+                    <li>Conversação natural</li>
+                </ul>
+                <button class="demo-btn" onclick="window.location.href='neural-hologram.html'">
+                    Conversar
+                </button>
+            </div>
+            
+            <div class="demo-card">
+                <div class="demo-icon">🧠</div>
+                <h3>IA Adaptativa</h3>
+                <p>Sistema que aprende e se adapta ao comportamento do usuário</p>
+                <ul class="demo-features">
+                    <li>Machine Learning</li>
+                    <li>Personalização automática</li>
+                    <li>Memória contextual</li>
+                    <li>Evolução contínua</li>
+                </ul>
+                <button class="demo-btn" onclick="window.location.href='neural-hologram.html'">
+                    Interagir
+                </button>
+            </div>
+            
+            <div class="demo-card">
+                <div class="demo-icon">⚡</div>
+                <h3>Performance Neural</h3>
+                <p>Processamento ultra-rápido com otimização avançada</p>
+                <ul class="demo-features">
+                    <li>60 FPS garantidos</li>
+                    <li>Latência < 50ms</li>
+                    <li>Otimização GPU</li>
+                    <li>Processamento paralelo</li>
+                </ul>
+                <button class="demo-btn" onclick="window.location.href='neural-hologram.html'">
+                    Testar Speed
+                </button>
+            </div>
+        </div>
+        
+        <div class="tech-specs">
+            <h2 class="section-title">Especificações Técnicas</h2>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="spec-value">95%</span>
+                    <div class="spec-label">Precisão Emocional</div>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-value">30ms</span>
+                    <div class="spec-label">Latência de Resposta</div>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-value">21</span>
+                    <div class="spec-label">Pontos de Tracking</div>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-value">60fps</span>
+                    <div class="spec-label">Taxa de Renderização</div>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-value">1000+</span>
+                    <div class="spec-label">Partículas Neurais</div>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-value">∞</span>
+                    <div class="spec-label">Possibilidades</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
