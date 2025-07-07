@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUNIC Enterprise - Business Intelligence Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #0f172a;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            color: #64748b;
+            font-size: 1.125rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        
+        .metric-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .metric-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .metric-change.positive {
+            color: #059669;
+        }
+        
+        .metric-change.negative {
+            color: #dc2626;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .chart-area {
+            height: 300px;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: end;
+            gap: 8px;
+            height: 200px;
+            padding: 20px;
+        }
+        
+        .chart-bar {
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px 4px 0 0;
+            min-width: 24px;
+            transition: all 0.3s ease;
+            animation: growUp 1.5s ease-out;
+        }
+        
+        @keyframes growUp {
+            from { height: 0; }
+            to { height: var(--height); }
+        }
+        
+        .activity-feed {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 500;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .table-content {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        th {
+            font-weight: 500;
+            color: #64748b;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            color: #0f172a;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .action-button {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-button:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        
+        .action-button.primary {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+        
+        .action-button.primary:hover {
+            background: #5a67d8;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            transform: translateX(500px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: #10b981;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        
+        .notification-title {
+            font-weight: 500;
+            color: #0f172a;
+        }
+        
+        .notification-message {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">GUNIC Enterprise</div>
+            <ul class="nav-links">
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#analytics">Analytics</a></li>
+                <li><a href="#reports">Reports</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+            <div class="user-menu">
+                <div class="user-avatar">JD</div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Business Intelligence Dashboard</h1>
+            <p class="page-subtitle">Real-time insights and analytics for your business</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Total Revenue</div>
+                    <div class="metric-icon" style="background: #dcfce7; color: #166534;">💰</div>
+                </div>
+                <div class="metric-value" id="totalRevenue">$0</div>
+                <div class="metric-change positive">
+                    <span>↗</span>
+                    <span id="revenueChange">+0%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Active Users</div>
+                    <div class="metric-icon" style="background: #dbeafe; color: #1d4ed8;">👥</div>
+                </div>
+                <div class="metric-value" id="activeUsers">0</div>
+                <div class="metric-change positive">
+                    <span>↗</span>
+                    <span id="usersChange">+0%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Conversion Rate</div>
+                    <div class="metric-icon" style="background: #fef3c7; color: #92400e;">📈</div>
+                </div>
+                <div class="metric-value" id="conversionRate">0%</div>
+                <div class="metric-change positive">
+                    <span>↗</span>
+                    <span id="conversionChange">+0%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Customer Satisfaction</div>
+                    <div class="metric-icon" style="background: #f3e8ff; color: #7c3aed;">⭐</div>
+                </div>
+                <div class="metric-value" id="satisfaction">0/5</div>
+                <div class="metric-change positive">
+                    <span>↗</span>
+                    <span id="satisfactionChange">+0%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Revenue Trend</h3>
+                </div>
+                <div class="chart-area">
+                    <div class="chart-bars" id="revenueChart"></div>
+                </div>
+            </div>
+
+            <div class="activity-feed">
+                <div class="chart-header">
+                    <h3 class="chart-title">Recent Activity</h3>
+                </div>
+                <div id="activityFeed">
+                    <!-- Activities will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="data-table">
+            <div class="table-header">
+                <h3 class="table-title">Top Performing Products</h3>
+            </div>
+            <div class="table-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Revenue</th>
+                            <th>Units Sold</th>
+                            <th>Growth</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTable">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div class="notification" id="notification">
+        <div class="notification-header">
+            <div class="notification-icon">✓</div>
+            <div class="notification-title">System Update</div>
+        </div>
+        <div class="notification-message" id="notificationMessage">
+            Dashboard data has been updated successfully.
+        </div>
+    </div>
+
+    <script src="enterprise-dashboard.js"></script>
+</body>
+</html>

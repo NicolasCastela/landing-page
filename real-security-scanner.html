@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUNIC Real Security Scanner</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'JetBrains Mono', monospace; 
+            background: #0a0a0a; 
+            color: #00ff00; 
+            padding: 2rem; 
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .title { 
+            text-align: center; 
+            font-size: 2rem; 
+            margin-bottom: 2rem; 
+            color: #00ffff; 
+        }
+        .scanner-form { 
+            background: rgba(0,0,0,0.8); 
+            border: 1px solid #00ff00; 
+            padding: 2rem; 
+            border-radius: 10px; 
+            margin-bottom: 2rem; 
+        }
+        .input-group { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .url-input { 
+            flex: 1; 
+            padding: 1rem; 
+            background: #000; 
+            border: 1px solid #00ff00; 
+            color: #00ff00; 
+            border-radius: 5px; 
+        }
+        .scan-btn { 
+            padding: 1rem 2rem; 
+            background: #ff0000; 
+            border: none; 
+            color: #fff; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        .results { 
+            background: #000; 
+            border: 1px solid #00ff00; 
+            padding: 1.5rem; 
+            border-radius: 10px; 
+            height: 500px; 
+            overflow-y: auto; 
+            font-size: 0.9rem; 
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        .warning { color: #ffff00; }
+        .info { color: #00ffff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🔍 REAL Security Scanner</h1>
+        
+        <div class="scanner-form">
+            <div class="input-group">
+                <input type="url" class="url-input" id="targetUrl" placeholder="https://exemplo.com" required>
+                <button class="scan-btn" onclick="startRealScan()">SCAN REAL</button>
+            </div>
+            <p style="color: #888; font-size: 0.8rem;">⚠️ Use apenas em sites próprios ou com autorização</p>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="info">Scanner real inicializado. Aguardando URL...</div>
+        </div>
+    </div>
+    
+    <script src="real-security-scanner.js"></script>
+    <script>
+        // Aviso importante sobre limitações
+        window.addEventListener('load', () => {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="error">⚠️ LIMITAÇÕES DO NAVEGADOR DETECTADAS</div>
+                <div class="warning">JavaScript no navegador tem limitações de segurança (CORS)</div>
+                <div class="info">Para scanner SEM limitações, você precisa de:</div>
+                <div class="success">1. Backend em Node.js/Python que faça as requisições</div>
+                <div class="success">2. Proxy para contornar CORS</div>
+                <div class="success">3. Ferramentas como Nmap, Burp Suite, OWASP ZAP</div>
+                <div class="warning">Este scanner fará o máximo possível dentro das limitações</div>
+                <div class="info">Aguardando URL para scan...</div>
+            `;
+        });
+    </script>
+</body>
+</html>
